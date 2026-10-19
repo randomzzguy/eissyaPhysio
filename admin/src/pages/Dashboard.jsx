@@ -133,17 +133,15 @@ const formatSlotTime = (time) => {
 };
 
 const scheduleLabel = (client) => {
-  const first = `${shortDay(client.schedule_day_1)} ${formatSlotTime(client.schedule_time_1)}`.trim();
-  const second = client.schedule_day_2 !== null && client.schedule_day_2 !== undefined && client.schedule_time_2
-    ? `${shortDay(client.schedule_day_2)} ${formatSlotTime(client.schedule_time_2)}`
-    : '';
-  return [first, second].filter(Boolean).join(' & ') || client.schedule || 'No recurring schedule';
+  const days = [shortDay(client.schedule_day_1), client.schedule_day_2 !== null && client.schedule_day_2 !== undefined ? shortDay(client.schedule_day_2) : ''].filter(Boolean).join(' & ');
+  const time = formatSlotTime(client.schedule_time_1);
+  return [days, time].filter(Boolean).join(', ') || client.schedule || 'No recurring schedule';
 };
 
 const getNextScheduledSession = (client, after = portalNow) => {
   const slots = [
     { day: client.schedule_day_1, time: client.schedule_time_1 },
-    { day: client.schedule_day_2, time: client.schedule_time_2 },
+    { day: client.schedule_day_2, time: client.schedule_time_1 },
   ].filter((slot) => slot.day !== null && slot.day !== undefined && slot.time);
   const candidates = [];
   for (let offset = 0; offset <= 14; offset += 1) {
@@ -189,7 +187,7 @@ const normalizeClient = (client) => {
     schedule_day_1: Number(firstDay),
     schedule_time_1: firstTime.slice(0, 5),
     schedule_day_2: client.package_name === 'Single Session' ? null : Number(client.schedule_day_2 ?? ((Number(firstDay) + 3) % 7)),
-    schedule_time_2: client.package_name === 'Single Session' ? null : (client.schedule_time_2 || firstTime).slice(0, 5),
+    schedule_time_2: client.package_name === 'Single Session' ? null : firstTime.slice(0, 5),
     session_duration_minutes: Number(client.session_duration_minutes || 60),
     cancelled_sessions: Number(client.cancelled_sessions || 0),
   };
@@ -237,8 +235,10 @@ function ClientForm({ client, onClose, onSave, saving }) {
           next.schedule_time_2 = null;
         } else if (next.schedule_day_2 === null || next.schedule_day_2 === undefined) {
           next.schedule_day_2 = 4;
-          next.schedule_time_2 = next.schedule_time_1 || '09:00';
         }
+      }
+      if (field === 'sessions_used') {
+        next.sessions_used = Math.min(Math.max(Number(value) || 0, 0), Number(next.sessions_total));
       }
       return next;
     });
@@ -246,22 +246,26 @@ function ClientForm({ client, onClose, onSave, saving }) {
 
   const submit = (event) => {
     event.preventDefault();
-    const schedulingChanged = !client || ['schedule_day_1', 'schedule_time_1', 'schedule_day_2', 'schedule_time_2']
+    const schedulingChanged = !client || ['schedule_day_1', 'schedule_time_1', 'schedule_day_2']
       .some((field) => String(form[field] ?? '') !== String(client[field] ?? ''));
+    const sessionsUsed = Math.min(Math.max(Number(form.sessions_used) || 0, 0), Number(form.sessions_total));
+    const packageComplete = sessionsUsed >= Number(form.sessions_total);
     const prepared = {
       ...form,
       schedule_day_1: Number(form.schedule_day_1),
       schedule_day_2: form.package_name === 'Single Session' ? null : Number(form.schedule_day_2),
-      schedule_time_2: form.package_name === 'Single Session' ? null : form.schedule_time_2,
+      schedule_time_2: form.package_name === 'Single Session' ? null : form.schedule_time_1,
       session_duration_minutes: Number(form.session_duration_minutes),
     };
     onSave({
       ...prepared,
       sessions_total: Number(form.sessions_total),
-      sessions_used: Number(form.sessions_used),
+      sessions_used: sessionsUsed,
       package_price: Number(form.package_price),
+      payment_status: packageComplete && form.payment_status !== 'paid' ? 'due' : form.payment_status,
+      status: packageComplete ? 'completed' : form.status,
       schedule: scheduleLabel(prepared),
-      next_session: schedulingChanged ? getNextScheduledSession(prepared, portalNow) : client.next_session,
+      next_session: packageComplete ? null : schedulingChanged ? getNextScheduledSession(prepared, portalNow) : client.next_session,
       email: form.email || null,
     });
   };
@@ -288,18 +292,18 @@ function ClientForm({ client, onClose, onSave, saving }) {
             <div className="form-section-title span-two"><span>Package</span><p>Payment becomes due after the final completed session.</p></div>
             <label className="field">Package<select value={form.package_name} onChange={(e) => update('package_name', e.target.value)}>{Object.keys(packageOptions).map((name) => <option key={name}>{name}</option>)}</select></label>
             <label className="field">Package price (RM)<input type="number" min="0" step="1" value={form.package_price} onChange={(e) => update('package_price', e.target.value)} required /></label>
+            <label className="field">Sessions already completed<input type="number" min="0" max={form.sessions_total} value={form.sessions_used} onChange={(e) => update('sessions_used', e.target.value)} /></label>
             <div className="package-form-summary span-two">
               <PackageCheck />
               <span><strong>{form.sessions_total} session{form.sessions_total === 1 ? '' : 's'}</strong><small>{formatMoney(form.package_price)} · currently {form.sessions_used} completed</small></span>
               <span className={`payment-state ${form.payment_status}`}>{form.payment_status === 'due' ? 'Payment due' : form.payment_status === 'paid' ? 'Paid' : 'Not due yet'}</span>
             </div>
 
-            <div className="form-section-title span-two"><span>Fixed weekly appointments</span><p>{form.package_name === 'Single Session' ? 'Choose the usual time for this visit.' : 'Two sessions per week; the next visit is scheduled automatically.'}</p></div>
+            <div className="form-section-title span-two"><span>Fixed weekly appointments</span><p>{form.package_name === 'Single Session' ? 'Choose the usual time for this visit.' : 'Choose two days; both weekly visits share this start time and duration.'}</p></div>
             <label className="field">First day<select value={form.schedule_day_1} onChange={(e) => update('schedule_day_1', e.target.value)}>{dayOptions.map((day) => <option value={day.value} key={day.value}>{day.label}</option>)}</select></label>
             <label className="field">Start time<input type="time" value={form.schedule_time_1} onChange={(e) => update('schedule_time_1', e.target.value)} required /></label>
             {form.package_name !== 'Single Session' && <>
-              <label className="field">Second day<select value={form.schedule_day_2 ?? 4} onChange={(e) => update('schedule_day_2', e.target.value)}>{dayOptions.map((day) => <option value={day.value} key={day.value}>{day.label}</option>)}</select></label>
-              <label className="field">Start time<input type="time" value={form.schedule_time_2 || form.schedule_time_1} onChange={(e) => update('schedule_time_2', e.target.value)} required /></label>
+              <label className="field span-two">Second day<select value={form.schedule_day_2 ?? 4} onChange={(e) => update('schedule_day_2', e.target.value)}>{dayOptions.map((day) => <option value={day.value} key={day.value}>{day.label}</option>)}</select></label>
             </>}
             <label className="field span-two">Session duration<select value={form.session_duration_minutes} onChange={(e) => update('session_duration_minutes', e.target.value)}>{durationOptions.map((duration) => <option value={duration.value} key={duration.value}>{duration.label}</option>)}</select></label>
             <label className="field span-two">Private notes<textarea rows="3" value={form.notes || ''} onChange={(e) => update('notes', e.target.value)} placeholder="Treatment reminders, accessibility notes, follow-ups…" /></label>

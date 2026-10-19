@@ -22,7 +22,7 @@ The SQL enables row-level security, so a signed-in user can only access records 
 - Single Session: 1 session, RM120
 - Trial Pack: 3 sessions, RM330
 - Progress Pack: 8 sessions, RM800
-- Multi-session packages use two fixed weekly appointment slots.
+- Multi-session packages use two fixed weekly days with one shared start time.
 - Each appointment can be 60, 90, or 120 minutes.
 - A cancelled visit advances to the next fixed slot and does not use a package session.
 - Payment stays “not due” until every package session is completed, then changes to “due” until marked paid.

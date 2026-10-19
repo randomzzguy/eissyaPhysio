@@ -7,7 +7,6 @@ alter table public.clients
   add column if not exists schedule_day_1 smallint,
   add column if not exists schedule_time_1 time,
   add column if not exists schedule_day_2 smallint,
-  add column if not exists schedule_time_2 time,
   add column if not exists session_duration_minutes integer,
   add column if not exists cancelled_sessions integer;
 

@@ -20,7 +20,6 @@ create table if not exists public.clients (
   schedule_day_1 smallint check (schedule_day_1 between 0 and 6),
   schedule_time_1 time,
   schedule_day_2 smallint check (schedule_day_2 between 0 and 6),
-  schedule_time_2 time,
   session_duration_minutes integer not null default 60 check (session_duration_minutes in (60, 90, 120)),
   schedule text,
   cancelled_sessions integer not null default 0 check (cancelled_sessions >= 0),
