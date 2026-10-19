@@ -1,16 +1,46 @@
-# React + Vite
+# Eissya Physio practice portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A private React dashboard for managing clients, physiotherapy packages, sessions, home visits, contact details, treatment reminders and payment dates.
 
-Currently, two official plugins are available:
+## One-time Supabase setup (free tier)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Create or open the Supabase project already referenced by `.env`.
+2. Open **SQL Editor**, paste `supabase/schema.sql`, and run it.
+3. Open **Authentication → Users → Add user** and create Eissya's email/password account. Do not enable public sign-up.
+4. Confirm **Authentication → URL Configuration** includes the deployed admin URL.
+5. Keep these environment variables in local `.env` and in Vercel:
 
-## React Compiler
+```env
+VITE_APP_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+VITE_APP_SUPABASE_KEY=YOUR_PUBLISHABLE_OR_ANON_KEY
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The SQL enables row-level security, so a signed-in user can only access records attached to their own user ID. Never place a Supabase service-role key in this app.
 
-## Expanding the Oxlint configuration
+## Local development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm install
+npm run dev
+```
+
+For a UI-only local preview without Supabase, set `VITE_DEMO_MODE=true`. Demo records are saved only in that browser's local storage. Never enable demo mode on a public deployment.
+
+## Deployment
+
+The simplest arrangement is:
+
+- Keep `eissya.site` on its current static host.
+- Deploy this `admin` directory as a separate Vercel project.
+- Set the Vercel project root to `admin`, build command to `npm run build`, and output directory to `dist`.
+- Add the two Supabase environment variables in Vercel.
+- Add `admin.eissya.site` in Vercel Domains and create the DNS record Vercel shows.
+
+`vercel.json` preserves client-side routes such as `/dashboard` when the page is refreshed.
+
+## Checks
+
+```bash
+npm run build
+npm run lint
+```
