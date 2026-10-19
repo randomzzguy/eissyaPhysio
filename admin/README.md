@@ -5,7 +5,7 @@ A private React dashboard for managing clients, physiotherapy packages, sessions
 ## One-time Supabase setup (free tier)
 
 1. Create or open the Supabase project already referenced by `.env`.
-2. Open **SQL Editor**, paste `supabase/schema.sql`, and run it.
+2. For a new project, open **SQL Editor**, paste `supabase/schema.sql`, and run it. If the original schema was already installed, run `supabase/migration_v2_packages_and_schedule.sql` instead.
 3. Open **Authentication → Users → Add user** and create Eissya's email/password account. Do not enable public sign-up.
 4. Confirm **Authentication → URL Configuration** includes the deployed admin URL.
 5. Keep these environment variables in local `.env` and in Vercel:
@@ -16,6 +16,16 @@ VITE_APP_SUPABASE_KEY=YOUR_PUBLISHABLE_OR_ANON_KEY
 ```
 
 The SQL enables row-level security, so a signed-in user can only access records attached to their own user ID. Never place a Supabase service-role key in this app.
+
+## Package and scheduling rules
+
+- Single Session: 1 session, RM120
+- Trial Pack: 3 sessions, RM330
+- Progress Pack: 8 sessions, RM800
+- Multi-session packages use two fixed weekly appointment slots.
+- Each appointment can be 60, 90, or 120 minutes.
+- A cancelled visit advances to the next fixed slot and does not use a package session.
+- Payment stays “not due” until every package session is completed, then changes to “due” until marked paid.
 
 ## Local development
 

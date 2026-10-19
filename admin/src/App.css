@@ -206,6 +206,15 @@ tbody tr:last-child td { border-bottom: 0; }
 .field.span-two { grid-column: 1 / -1; }
 .field input, .field select { height: 44px; }
 .field textarea { resize: vertical; min-height: 88px; }
+.form-section-title { margin-top: 4px; padding-top: 19px; border-top: 1px solid var(--line); }
+.form-section-title span { display: block; color: var(--ink); font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; }
+.form-section-title p { margin: 5px 0 0; color: var(--muted); font-size: .68rem; font-weight: 400; line-height: 1.45; }
+.package-form-summary { min-height: 64px; padding: 12px 14px; border: 1px solid #f0dce3; border-radius: 12px; display: flex; align-items: center; gap: 11px; background: #fff8fa; }
+.package-form-summary > svg { width: 21px; color: var(--brand); }
+.package-form-summary > span:nth-child(2) { flex: 1; min-width: 0; }
+.package-form-summary strong, .package-form-summary small { display: block; }
+.package-form-summary strong { color: var(--ink); font-size: .75rem; }
+.package-form-summary small { margin-top: 4px; color: var(--muted); font-size: .64rem; }
 .modal-actions { position: sticky; bottom: 0; margin: 25px -26px 0; padding: 17px 26px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 10px; background: #fff; }
 .drawer-backdrop { padding: 0; place-items: stretch end; }
 .client-drawer { width: min(440px, 100%); height: 100%; padding: 34px; overflow-y: auto; background: #fff; box-shadow: -20px 0 60px rgba(21, 43, 35, .16); animation: drawerIn .25s ease-out; }
@@ -227,6 +236,12 @@ tbody tr:last-child td { border-bottom: 0; }
 .progress-track span { display: block; height: 100%; border-radius: 5px; background: var(--brand); }
 .complete-session { width: 100%; min-height: 39px; margin-top: 16px; border: 1px solid #edc8d4; border-radius: 10px; background: var(--brand-soft); color: var(--brand); font-size: .7rem; font-weight: 700; cursor: pointer; }
 .complete-session svg { width: 14px; vertical-align: -3px; margin-right: 5px; }
+.cancel-session { width: 100%; min-height: 39px; margin-top: 13px; border: 1px solid #e4e7e6; border-radius: 10px; background: #f8f9f8; color: #68736f; font-size: .7rem; font-weight: 700; cursor: pointer; }
+.cancel-session:hover { background: #f2f4f3; }
+.cancel-session svg { width: 14px; vertical-align: -3px; margin-right: 5px; }
+.payment-state.pending { background: #f4f6f5; color: #6c7873; }
+.payment-state.due { background: var(--yellow-soft); color: #8e6826; }
+.payment-state.paid { background: var(--sage-soft); color: var(--sage); }
 .notes-box { margin: 5px 0 20px; padding: 17px; border: 0; border-radius: 12px; background: #f7f9f8; }
 .notes-box > p { margin: 0; color: var(--muted); }
 .delete-button { border: 0; background: none; color: #b45a58; display: flex; align-items: center; gap: 7px; font-size: .69rem; cursor: pointer; }
