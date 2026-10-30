@@ -66,11 +66,8 @@
 .support-icon svg { width: 17px; }
 .sidebar-support strong { display: block; font-family: 'Fraunces', serif; font-size: .9rem; }
 .sidebar-support p { margin: 6px 0 0; color: var(--muted); font-size: .71rem; line-height: 1.5; }
-.sidebar-account { padding: 17px 7px 0; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
-.sidebar-account > div { min-width: 0; flex: 1; }
-.sidebar-account strong, .sidebar-account span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sidebar-account strong { font-size: .75rem; }
-.sidebar-account div span { margin-top: 2px; color: var(--muted); font-size: .65rem; }
+.sidebar-account { padding: 17px 7px 0; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sidebar-profile-photo { width: 44px; height: 44px; border-radius: 50%; display: block; object-fit: cover; background: var(--brand-soft); }
 .avatar { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); font-size: .67rem; font-weight: 800; }
 .avatar.large { width: 66px; height: 66px; border-radius: 20px; font-size: 1rem; }
 .avatar.small { width: 34px; height: 34px; border-radius: 10px; font-size: .62rem; }
@@ -198,9 +195,36 @@ tbody tr:last-child td { border-bottom: 0; }
 /* Modal and drawer */
 .modal-backdrop, .drawer-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; background: rgba(20, 38, 32, .38); backdrop-filter: blur(3px); }
 .modal { width: min(680px, 100%); max-height: calc(100vh - 48px); border-radius: 20px; overflow: auto; background: #fff; box-shadow: 0 28px 80px rgba(16, 39, 31, .23); }
+.appointment-modal { width: min(980px, 100%); }
 .modal-header { position: sticky; top: 0; z-index: 2; padding: 24px 26px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,.96); }
 .modal-header h2 { margin: 0; font-family: 'Fraunces', serif; font-size: 1.6rem; }
+.appointment-header { display: grid; grid-template-columns: 1fr auto 38px; gap: 16px; }
+.appointment-header > div > p:last-child { margin: 6px 0 0; color: var(--muted); font-size: .68rem; }
+.appointment-status { min-height: 29px; padding: 0 11px; border-radius: 9px; display: inline-flex; align-items: center; background: var(--blue-soft); color: #537c8f; font-size: .62rem; font-weight: 800; }
+.appointment-status.completed { background: var(--sage-soft); color: var(--sage); }
+.appointment-status.cancelled { background: #fff0ef; color: #b04f4c; }
+.appointment-status.rescheduled { background: var(--yellow-soft); color: #8e6826; }
 .client-form { padding: 24px 26px 0; }
+.appointment-form { padding-top: 20px; }
+.appointment-summary-grid { display: grid; grid-template-columns: 1.2fr .8fr .7fr; gap: 15px; align-items: end; }
+.appointment-patient { min-height: 70px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 11px; background: #fafbfa; }
+.appointment-patient span, .appointment-patient strong, .appointment-patient small { display: block; }
+.appointment-patient span { color: var(--muted); font-size: .61rem; font-weight: 700; }
+.appointment-patient strong { margin-top: 4px; color: var(--ink); font-size: .78rem; }
+.appointment-patient small { margin-top: 3px; color: var(--brand); font-size: .6rem; }
+.soap-section { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--line); }
+.soap-title { margin-bottom: 16px; display: flex; align-items: center; gap: 11px; }
+.soap-title > span { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); font-family: 'Fraunces', serif; font-size: .95rem; font-weight: 700; }
+.soap-title strong, .soap-title small { display: block; }
+.soap-title strong { color: var(--ink); font-family: 'Fraunces', serif; font-size: 1rem; }
+.soap-title small { margin-top: 2px; color: var(--muted); font-size: .62rem; }
+.soap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.soap-grid .span-two { grid-column: span 2; }
+.soap-grid .span-three { grid-column: 1 / -1; }
+.soap-grid textarea { min-height: 78px; }
+.appointment-actions { align-items: center; }
+.appointment-state-actions { margin-right: auto; display: flex; gap: 8px; }
+.appointment-state-actions .complete-session, .appointment-state-actions .cancel-session { width: auto; min-height: 40px; margin: 0; padding: 0 13px; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .field { display: block; }
 .field.span-two { grid-column: 1 / -1; }
@@ -244,6 +268,15 @@ tbody tr:last-child td { border-bottom: 0; }
 .payment-state.paid { background: var(--sage-soft); color: var(--sage); }
 .notes-box { margin: 5px 0 20px; padding: 17px; border: 0; border-radius: 12px; background: #f7f9f8; }
 .notes-box > p { margin: 0; color: var(--muted); }
+.appointment-history { margin-bottom: 18px; }
+.appointment-history > button { width: 100%; padding: 12px 3px; border: 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 118px 1fr 16px; align-items: center; gap: 10px; background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
+.appointment-history > button:hover { background: #fafbfa; }
+.appointment-history > button strong, .appointment-history > button small { display: block; }
+.appointment-history > button strong { font-size: .7rem; }
+.appointment-history > button small { margin-top: 4px; color: var(--muted); font-size: .58rem; }
+.appointment-history > button > span:nth-child(2) { color: #68736f; font-size: .65rem; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.appointment-history > button svg { width: 14px; color: #a3aca8; }
+.empty-history { margin: 0; color: var(--muted); font-size: .7rem; }
 .delete-button { border: 0; background: none; color: #b45a58; display: flex; align-items: center; gap: 7px; font-size: .69rem; cursor: pointer; }
 .delete-button svg { width: 15px; }
 .mobile-close, .menu-button, .mobile-overlay { display: none; }
@@ -298,6 +331,13 @@ tbody tr:last-child td { border-bottom: 0; }
   .modal { max-height: 93vh; border-radius: 20px 20px 0 0; }
   .modal-header, .client-form { padding-left: 20px; padding-right: 20px; }
   .modal-actions { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
+  .appointment-header { grid-template-columns: 1fr 34px; }
+  .appointment-header .appointment-status { grid-row: 2; grid-column: 1 / -1; justify-self: start; }
+  .appointment-summary-grid, .soap-grid { grid-template-columns: 1fr; }
+  .soap-grid .span-two, .soap-grid .span-three { grid-column: auto; }
+  .appointment-actions { flex-wrap: wrap; }
+  .appointment-state-actions { width: 100%; margin: 0; }
+  .appointment-state-actions > button { flex: 1; }
   .client-drawer { padding: 25px 22px; }
   .full-schedule { padding: 4px 12px; }
   .schedule-card { grid-template-columns: 55px minmax(0, 1fr) 18px; gap: 13px; }

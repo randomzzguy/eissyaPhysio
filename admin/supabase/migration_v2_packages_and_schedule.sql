@@ -10,16 +10,16 @@ alter table public.clients
   add column if not exists session_duration_minutes integer,
   add column if not exists cancelled_sessions integer;
 
--- The Progress Pack is now eight sessions at the existing RM100/session rate.
+-- The Progress Pack is eight sessions.
 update public.clients
 set sessions_total = 8
 where package_name = 'Progress Pack' and sessions_total = 6;
 
 update public.clients
 set package_price = case package_name
-  when 'Single Session' then 120
-  when 'Trial Pack' then 330
-  when 'Progress Pack' then 800
+  when 'Single Session' then 140
+  when 'Trial Pack' then 400
+  when 'Progress Pack' then 1000
   else 0
 end
 where package_price is null;
@@ -35,7 +35,7 @@ update public.clients set session_duration_minutes = 60 where session_duration_m
 update public.clients set cancelled_sessions = 0 where cancelled_sessions is null;
 
 alter table public.clients
-  alter column package_price set default 120,
+  alter column package_price set default 140,
   alter column package_price set not null,
   alter column payment_status set default 'pending',
   alter column payment_status set not null,

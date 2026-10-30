@@ -29,9 +29,9 @@ import {
 import { isDemoMode, supabase } from '../supabaseClient';
 
 const packageOptions = {
-  'Single Session': { sessions: 1, price: 120 },
-  'Trial Pack': { sessions: 3, price: 330 },
-  'Progress Pack': { sessions: 8, price: 800 },
+  'Single Session': { sessions: 1, price: 140 },
+  'Trial Pack': { sessions: 3, price: 400 },
+  'Progress Pack': { sessions: 8, price: 1000 },
 };
 
 const dayOptions = [
@@ -63,42 +63,42 @@ const demoClients = [
   {
     id: 'demo-1', name: 'Aina Rahman', phone: '+60 12-681 4092', email: 'aina.rahman@example.com',
     location: 'Taman Canning, Ipoh', condition: 'Lower back pain', package_name: 'Progress Pack',
-    sessions_total: 8, sessions_used: 4, package_price: 800, payment_status: 'pending', next_session: addDays(0, 14, 30),
+    sessions_total: 8, sessions_used: 4, package_price: 1000, payment_status: 'pending', next_session: addDays(0, 14, 30),
     schedule_day_1: 1, schedule_time_1: '14:30', schedule_day_2: 4, schedule_time_2: '14:30', session_duration_minutes: 60,
     schedule: 'Mon & Thu, 2:30 PM', cancelled_sessions: 1, status: 'active', notes: 'Focus on core stability and safe lifting technique.',
   },
   {
     id: 'demo-2', name: 'Kavitha Nair', phone: '+60 17-532 8810', email: 'kavitha.n@example.com',
     location: 'Bercham, Ipoh', condition: 'Post-stroke mobility', package_name: 'Progress Pack',
-    sessions_total: 8, sessions_used: 2, package_price: 800, payment_status: 'pending', next_session: addDays(1, 9, 0),
+    sessions_total: 8, sessions_used: 2, package_price: 1000, payment_status: 'pending', next_session: addDays(1, 9, 0),
     schedule_day_1: 2, schedule_time_1: '09:00', schedule_day_2: 5, schedule_time_2: '09:00', session_duration_minutes: 90,
     schedule: 'Tue & Fri, 9:00 AM', cancelled_sessions: 0, status: 'active', notes: 'Daughter will be present. Bring gait belt.',
   },
   {
     id: 'demo-3', name: 'Lim Wei Jian', phone: '+60 16-208 7451', email: 'weijian.lim@example.com',
     location: 'Greentown, Ipoh', condition: 'Shoulder impingement', package_name: 'Trial Pack',
-    sessions_total: 3, sessions_used: 2, package_price: 330, payment_status: 'pending', next_session: addDays(2, 16, 0),
+    sessions_total: 3, sessions_used: 2, package_price: 400, payment_status: 'pending', next_session: addDays(2, 16, 0),
     schedule_day_1: 3, schedule_time_1: '16:00', schedule_day_2: 6, schedule_time_2: '11:00', session_duration_minutes: 60,
     schedule: 'Wed 4:00 PM & Sat 11:00 AM', cancelled_sessions: 0, status: 'active', notes: 'Review desk posture and resistance-band programme.',
   },
   {
     id: 'demo-4', name: 'Nur Amira', phone: '+60 19-445 1206', email: '',
     location: 'Meru, Ipoh', condition: 'Knee osteoarthritis', package_name: 'Trial Pack',
-    sessions_total: 3, sessions_used: 3, package_price: 330, payment_status: 'due', next_session: null,
+    sessions_total: 3, sessions_used: 3, package_price: 400, payment_status: 'due', next_session: null,
     schedule_day_1: 1, schedule_time_1: '15:00', schedule_day_2: 4, schedule_time_2: '15:00', session_duration_minutes: 60,
     schedule: 'Mon & Thu, 3:00 PM', cancelled_sessions: 2, status: 'completed', notes: 'Package complete; discuss renewal on follow-up call.',
   },
   {
     id: 'demo-5', name: 'David Tan', phone: '+60 11-3720 0918', email: 'david.tan@example.com',
     location: 'Station 18, Ipoh', condition: 'Ankle sprain', package_name: 'Single Session',
-    sessions_total: 1, sessions_used: 0, package_price: 120, payment_status: 'pending', next_session: addDays(4, 11, 30),
+    sessions_total: 1, sessions_used: 0, package_price: 140, payment_status: 'pending', next_session: addDays(4, 11, 30),
     schedule_day_1: 5, schedule_time_1: '11:30', schedule_day_2: null, schedule_time_2: null, session_duration_minutes: 90,
     schedule: 'Fri, 11:30 AM', cancelled_sessions: 0, status: 'active', notes: 'Initial assessment. Injury occurred while playing badminton.',
   },
   {
     id: 'demo-6', name: 'Siti Hajar', phone: '+60 13-998 7632', email: 'siti.hajar@example.com',
     location: 'Tambun, Ipoh', condition: 'Postnatal recovery', package_name: 'Progress Pack',
-    sessions_total: 8, sessions_used: 8, package_price: 800, payment_status: 'paid', next_session: null,
+    sessions_total: 8, sessions_used: 8, package_price: 1000, payment_status: 'paid', next_session: null,
     schedule_day_1: 2, schedule_time_1: '10:00', schedule_day_2: 5, schedule_time_2: '10:00', session_duration_minutes: 60,
     schedule: 'Tue & Fri, 10:00 AM', cancelled_sessions: 1, status: 'completed', notes: 'Programme completed with good progress.',
   },
@@ -106,9 +106,17 @@ const demoClients = [
 
 const emptyClient = {
   name: '', phone: '', email: '', location: '', condition: '', package_name: 'Trial Pack',
-  sessions_total: 3, sessions_used: 0, package_price: 330, payment_status: 'pending', next_session: '',
+  sessions_total: 3, sessions_used: 0, package_price: 400, payment_status: 'pending', next_session: '',
   schedule_day_1: 1, schedule_time_1: '09:00', schedule_day_2: 4, schedule_time_2: '09:00',
   session_duration_minutes: 60, schedule: '', cancelled_sessions: 0, status: 'active', notes: '',
+};
+
+const emptyAppointment = {
+  status: 'scheduled', scheduled_start: '', original_scheduled_start: '', duration_minutes: 60,
+  cc_diagnosis: '', pain_level: '', patient_goals: '', functional_limitations: '', posture_gait: '', rom: '',
+  strength_grade: '', balance_coordination: '', functional_activities: '', special_tests: '', assistive_devices: '',
+  clinical_impression: '', progress: '', barriers_progress: '', response_treatment: '', treatment_focus: '',
+  interventions: '', modalities: '', frequency: '', hep: '', referrals_follow_up: '', next_session_goals: '',
 };
 
 const formatDate = (value, options = {}) => {
@@ -119,6 +127,20 @@ const formatDate = (value, options = {}) => {
 const formatTime = (value) => value
   ? new Intl.DateTimeFormat('en-MY', { hour: 'numeric', minute: '2-digit' }).format(new Date(value))
   : '—';
+
+const toDateTimeLocal = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+};
+
+const sameInstant = (first, second) => first && second && Math.abs(new Date(first) - new Date(second)) < 60000;
+const appointmentStatusLabel = (appointment) => {
+  if (appointment.status === 'completed') return 'Completed';
+  if (appointment.status === 'cancelled') return 'Patient cancelled';
+  if (!sameInstant(appointment.scheduled_start, appointment.original_scheduled_start)) return 'Rescheduled';
+  return 'Scheduled';
+};
 
 const getInitials = (name = '') => name.split(' ').map((word) => word[0]).slice(0, 2).join('').toUpperCase();
 const phoneHref = (phone = '') => `https://wa.me/${phone.replace(/\D/g, '')}`;
@@ -157,19 +179,31 @@ const getNextScheduledSession = (client, after = portalNow) => {
   return candidates.sort((a, b) => a - b)[0]?.toISOString() || null;
 };
 
-const buildUpcomingVisits = (clients) => clients.flatMap((client) => {
+const buildUpcomingVisits = (clients, appointments) => clients.flatMap((client) => {
   const remaining = Math.max(Number(client.sessions_total) - Number(client.sessions_used), 0);
   if (client.status !== 'active' || !client.next_session || remaining === 0) return [];
   const visits = [];
   let cursor = client.next_session;
-  for (let index = 0; index < Math.min(remaining, 8); index += 1) {
-    visits.push({ ...client, sourceClient: client, scheduled_start: cursor });
+  let attempts = 0;
+  while (visits.length < Math.min(remaining, 8) && attempts < 32) {
+    const appointmentRecord = appointments.find((appointment) => appointment.client_id === client.id && sameInstant(appointment.original_scheduled_start, cursor));
+    if (!appointmentRecord || appointmentRecord.status === 'scheduled') {
+      const scheduledStart = appointmentRecord?.scheduled_start || cursor;
+      if (new Date(scheduledStart) >= portalNow) visits.push({
+        ...client,
+        sourceClient: client,
+        scheduled_start: scheduledStart,
+        schedule_key: cursor,
+        appointmentRecord: appointmentRecord || null,
+        session_number: Number(client.sessions_used) + visits.length + 1,
+      });
+    }
     cursor = getNextScheduledSession(client, new Date(new Date(cursor).getTime() + 60000));
     if (!cursor) break;
+    attempts += 1;
   }
   return visits;
-}).filter((visit) => new Date(visit.scheduled_start) >= portalNow)
-  .sort((a, b) => new Date(a.scheduled_start) - new Date(b.scheduled_start));
+}).sort((a, b) => new Date(a.scheduled_start) - new Date(b.scheduled_start));
 
 const normalizeClient = (client) => {
   const packageMeta = packageOptions[client.package_name] || packageOptions['Trial Pack'];
@@ -306,7 +340,6 @@ function ClientForm({ client, onClose, onSave, saving }) {
               <label className="field span-two">Second day<select value={form.schedule_day_2 ?? 4} onChange={(e) => update('schedule_day_2', e.target.value)}>{dayOptions.map((day) => <option value={day.value} key={day.value}>{day.label}</option>)}</select></label>
             </>}
             <label className="field span-two">Session duration<select value={form.session_duration_minutes} onChange={(e) => update('session_duration_minutes', e.target.value)}>{durationOptions.map((duration) => <option value={duration.value} key={duration.value}>{duration.label}</option>)}</select></label>
-            <label className="field span-two">Private notes<textarea rows="3" value={form.notes || ''} onChange={(e) => update('notes', e.target.value)} placeholder="Treatment reminders, accessibility notes, follow-ups…" /></label>
           </div>
           <footer className="modal-actions">
             <button className="secondary-button" type="button" onClick={onClose}>Cancel</button>
@@ -318,8 +351,106 @@ function ClientForm({ client, onClose, onSave, saving }) {
   );
 }
 
-function ClientDetails({ client, onClose, onEdit, onComplete, onCancelSession, onMarkPaid, onDelete }) {
+function AppointmentCard({ visit, onClose, onSave, saving }) {
+  const client = visit.sourceClient;
+  const [form, setForm] = useState({
+    ...emptyAppointment,
+    ...(visit.appointmentRecord || {}),
+    client_id: client.id,
+    scheduled_start: toDateTimeLocal(visit.appointmentRecord?.scheduled_start || visit.scheduled_start),
+    original_scheduled_start: visit.appointmentRecord?.original_scheduled_start || visit.schedule_key || visit.scheduled_start,
+    duration_minutes: visit.appointmentRecord?.duration_minutes || client.session_duration_minutes,
+    cc_diagnosis: visit.appointmentRecord?.cc_diagnosis || client.condition || '',
+  });
+
+  const update = (field, value) => setForm((current) => ({ ...current, [field]: value }));
+  const submit = (event) => { event.preventDefault(); onSave(form, form.status); };
+  const terminal = form.status === 'completed' || form.status === 'cancelled';
+  const statusLabel = appointmentStatusLabel(form);
+
+  return (
+    <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <section className="modal appointment-modal" role="dialog" aria-modal="true" aria-labelledby="appointment-title">
+        <header className="modal-header appointment-header">
+          <div>
+            <p className="eyebrow">Appointment record</p>
+            <h2 id="appointment-title">{client.name}</h2>
+            <p>{formatDate(form.scheduled_start)} at {formatTime(form.scheduled_start)} · {client.location || 'Home visit'}</p>
+          </div>
+          <span className={`appointment-status ${form.status} ${statusLabel.toLowerCase().replaceAll(' ', '-')}`}>{statusLabel}</span>
+          <button className="icon-button" onClick={onClose} aria-label="Close"><X /></button>
+        </header>
+        <form onSubmit={submit} className="client-form appointment-form">
+          <div className="appointment-summary-grid">
+            <label className="field">Appointment date & time<input type="datetime-local" value={form.scheduled_start} onChange={(e) => update('scheduled_start', e.target.value)} disabled={terminal} required /></label>
+            <label className="field">Duration<select value={form.duration_minutes} onChange={(e) => update('duration_minutes', e.target.value)} disabled={terminal}>{durationOptions.map((duration) => <option value={duration.value} key={duration.value}>{duration.label}</option>)}</select></label>
+            <div className="appointment-patient"><span>Session</span><strong>{Math.min(visit.session_number || client.sessions_used + 1, client.sessions_total)} of {client.sessions_total}</strong><small>{client.package_name}</small></div>
+          </div>
+
+          <div className="soap-section">
+            <div className="soap-title"><span>S</span><div><strong>Subjective</strong><small>What the patient reports</small></div></div>
+            <div className="soap-grid">
+              <label className="field span-two">Chief complaint / diagnosis<input value={form.cc_diagnosis} onChange={(e) => update('cc_diagnosis', e.target.value)} /></label>
+              <label className="field">Pain level (0–10)<input type="number" min="0" max="10" step="1" value={form.pain_level ?? ''} onChange={(e) => update('pain_level', e.target.value)} /></label>
+              <label className="field span-two">Patient goals<textarea rows="3" value={form.patient_goals} onChange={(e) => update('patient_goals', e.target.value)} /></label>
+              <label className="field">Functional limitations<textarea rows="3" value={form.functional_limitations} onChange={(e) => update('functional_limitations', e.target.value)} /></label>
+            </div>
+          </div>
+
+          <div className="soap-section">
+            <div className="soap-title"><span>O</span><div><strong>Objective</strong><small>Measured findings and observations</small></div></div>
+            <div className="soap-grid">
+              <label className="field">Posture / gait<textarea rows="3" value={form.posture_gait} onChange={(e) => update('posture_gait', e.target.value)} /></label>
+              <label className="field">Range of motion (ROM)<textarea rows="3" value={form.rom} onChange={(e) => update('rom', e.target.value)} /></label>
+              <label className="field">Strength grade<select value={form.strength_grade ?? ''} onChange={(e) => update('strength_grade', e.target.value)}><option value="">Not assessed</option>{[0, 1, 2, 3, 4, 5].map((grade) => <option value={grade} key={grade}>{grade}{grade > 0 ? '+' : ''}</option>)}</select></label>
+              <label className="field">Balance & coordination<textarea rows="3" value={form.balance_coordination} onChange={(e) => update('balance_coordination', e.target.value)} /></label>
+              <label className="field span-two">Functional activities<textarea rows="3" value={form.functional_activities} onChange={(e) => update('functional_activities', e.target.value)} /></label>
+              <label className="field span-two">Special tests<textarea rows="3" value={form.special_tests} onChange={(e) => update('special_tests', e.target.value)} /></label>
+              <label className="field">Assistive devices used<input value={form.assistive_devices} onChange={(e) => update('assistive_devices', e.target.value)} placeholder="e.g. None, cane, walker" /></label>
+            </div>
+          </div>
+
+          <div className="soap-section">
+            <div className="soap-title"><span>A</span><div><strong>Assessment</strong><small>Clinical interpretation and progress</small></div></div>
+            <div className="soap-grid">
+              <label className="field span-three">Clinical impression<textarea rows="4" value={form.clinical_impression} onChange={(e) => update('clinical_impression', e.target.value)} /></label>
+              <label className="field">Progress<textarea rows="3" value={form.progress} onChange={(e) => update('progress', e.target.value)} /></label>
+              <label className="field span-two">Barriers to progress<textarea rows="3" value={form.barriers_progress} onChange={(e) => update('barriers_progress', e.target.value)} /></label>
+              <label className="field span-three">Response to treatment<textarea rows="3" value={form.response_treatment} onChange={(e) => update('response_treatment', e.target.value)} /></label>
+            </div>
+          </div>
+
+          <div className="soap-section">
+            <div className="soap-title"><span>P</span><div><strong>Plan</strong><small>Treatment delivered and next steps</small></div></div>
+            <div className="soap-grid">
+              <label className="field span-three">Treatment focus<input value={form.treatment_focus} onChange={(e) => update('treatment_focus', e.target.value)} /></label>
+              <label className="field">Interventions<textarea rows="3" value={form.interventions} onChange={(e) => update('interventions', e.target.value)} /></label>
+              <label className="field">Modalities<textarea rows="3" value={form.modalities} onChange={(e) => update('modalities', e.target.value)} /></label>
+              <label className="field">Frequency<select value={form.frequency} onChange={(e) => update('frequency', e.target.value)}><option value="">Select frequency</option><option>Once weekly</option><option>Twice weekly</option><option>Three times weekly</option><option>As needed</option><option>Daily home programme</option></select></label>
+              <label className="field span-two">Home exercise programme (HEP)<textarea rows="3" value={form.hep} onChange={(e) => update('hep', e.target.value)} /></label>
+              <label className="field">Referrals / follow-up<textarea rows="3" value={form.referrals_follow_up} onChange={(e) => update('referrals_follow_up', e.target.value)} /></label>
+              <label className="field span-three">Next session goals<textarea rows="3" value={form.next_session_goals} onChange={(e) => update('next_session_goals', e.target.value)} /></label>
+            </div>
+          </div>
+
+          <footer className="modal-actions appointment-actions">
+            {!terminal && <div className="appointment-state-actions">
+              <button className="cancel-session" type="button" onClick={() => onSave(form, 'cancelled')} disabled={saving || !form.scheduled_start}><CalendarX2 /> Patient cancelled</button>
+              <button className="complete-session" type="button" onClick={() => onSave(form, 'completed')} disabled={saving || !form.scheduled_start}><Check /> Session completed</button>
+            </div>}
+            <button className="secondary-button" type="button" onClick={onClose}>Close</button>
+            <button className="primary-button" type="submit" disabled={saving}>{saving ? 'Saving…' : terminal ? 'Save notes' : 'Save appointment'}</button>
+          </footer>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+function ClientDetails({ client, appointments, onClose, onEdit, onOpenAppointment, onMarkPaid, onDelete }) {
   const remaining = Math.max(client.sessions_total - client.sessions_used, 0);
+  const currentAppointment = appointments.find((appointment) => appointment.status === 'scheduled' && sameInstant(appointment.original_scheduled_start, client.next_session));
+  const nextVisitStart = currentAppointment?.scheduled_start || client.next_session;
   return (
     <div className="drawer-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <aside className="client-drawer" role="dialog" aria-modal="true" aria-label={`${client.name} details`}>
@@ -345,22 +476,26 @@ function ClientDetails({ client, onClose, onEdit, onComplete, onCancelSession, o
           <div className="detail-row"><span>{client.package_name}</span><strong>{remaining} sessions left</strong></div>
           <div className="progress-track"><span style={{ width: `${Math.min((client.sessions_used / client.sessions_total) * 100, 100)}%` }} /></div>
           <div className="detail-row muted"><span>{client.sessions_used} completed · {client.cancelled_sessions || 0} cancelled</span><span>{client.sessions_total} total</span></div>
-          {remaining > 0 && client.next_session && <button className="complete-session" onClick={onComplete}><Check /> Mark this session complete</button>}
         </div>
         <div className="detail-section">
           <h3>Schedule</h3>
-          <p><CalendarDays /> {client.next_session ? `${formatDate(client.next_session)} at ${formatTime(client.next_session)}` : 'No upcoming visit'}</p>
+          <p><CalendarDays /> {nextVisitStart ? `${formatDate(nextVisitStart)} at ${formatTime(nextVisitStart)}` : 'No upcoming visit'}</p>
           <p><Clock3 /> {scheduleLabel(client)} · {durationLabel(client.session_duration_minutes)}</p>
-          {client.next_session && remaining > 0 && <button className="cancel-session" onClick={onCancelSession}><CalendarX2 /> Patient cancelled this visit</button>}
         </div>
         <div className="detail-section payment-detail">
           <h3>Package payment</h3>
           <div className="detail-row"><span>{formatMoney(client.package_price)}</span><span className={`payment-state ${client.payment_status}`}>{client.payment_status === 'due' ? 'Payment due' : client.payment_status === 'paid' ? 'Paid' : `Due after ${remaining} session${remaining === 1 ? '' : 's'}`}</span></div>
           {client.payment_status === 'due' && <button className="complete-session" onClick={onMarkPaid}><Banknote /> Mark package as paid</button>}
         </div>
-        <div className="detail-section notes-box">
-          <h3>Private notes</h3>
-          <p>{client.notes || 'No notes yet.'}</p>
+        <div className="detail-section appointment-history">
+          <h3>Appointment notes</h3>
+          {appointments.length ? appointments.map((appointment) => (
+            <button key={appointment.id} onClick={() => onOpenAppointment({ ...client, sourceClient: client, scheduled_start: appointment.scheduled_start, schedule_key: appointment.original_scheduled_start, appointmentRecord: appointment })}>
+              <span><strong>{formatDate(appointment.scheduled_start)}</strong><small>{formatTime(appointment.scheduled_start)} · {appointmentStatusLabel(appointment)}</small></span>
+              <span>{appointment.progress || appointment.clinical_impression || appointment.response_treatment || 'Open SOAP notes'}</span>
+              <ChevronRight />
+            </button>
+          )) : <p className="empty-history">No appointment notes saved yet.</p>}
         </div>
         <button className="delete-button" onClick={onDelete}><Trash2 /> Delete client record</button>
       </aside>
@@ -375,11 +510,17 @@ function Dashboard({ session }) {
     return (saved ? JSON.parse(saved) : demoClients).map(normalizeClient);
   });
   const [loading, setLoading] = useState(!isDemoMode);
+  const [appointments, setAppointments] = useState(() => {
+    if (!isDemoMode) return [];
+    const saved = localStorage.getItem('eissya-demo-appointments');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [view, setView] = useState('overview');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [formClient, setFormClient] = useState(undefined);
   const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [saving, setSaving] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [error, setError] = useState('');
@@ -387,10 +528,16 @@ function Dashboard({ session }) {
   useEffect(() => {
     if (isDemoMode) return undefined;
     let active = true;
-    supabase.from('clients').select('*').order('name').then(({ data, error: queryError }) => {
+    Promise.all([
+      supabase.from('clients').select('*').order('name'),
+      supabase.from('appointments').select('*').order('scheduled_start', { ascending: false }),
+    ]).then(([clientResult, appointmentResult]) => {
       if (!active) return;
-      if (queryError) setError('Client records could not be loaded. Check the Supabase setup instructions.');
-      else setClients((data || []).map(normalizeClient));
+      if (clientResult.error || appointmentResult.error) setError('Records could not be loaded. Run the latest Supabase migration, then refresh.');
+      else {
+        setClients((clientResult.data || []).map(normalizeClient));
+        setAppointments(appointmentResult.data || []);
+      }
       setLoading(false);
     });
     return () => { active = false; };
@@ -401,8 +548,13 @@ function Dashboard({ session }) {
     localStorage.setItem('eissya-demo-clients', JSON.stringify(nextClients));
   };
 
+  const persistDemoAppointments = (nextAppointments) => {
+    setAppointments(nextAppointments);
+    localStorage.setItem('eissya-demo-appointments', JSON.stringify(nextAppointments));
+  };
+
   const activeClients = clients.filter((client) => client.status === 'active');
-  const upcoming = buildUpcomingVisits(activeClients);
+  const upcoming = buildUpcomingVisits(activeClients, appointments);
   const paymentAlerts = clients.filter((client) => client.payment_status === 'due');
   const sessionsLeft = activeClients.reduce((sum, client) => sum + Math.max(client.sessions_total - client.sessions_used, 0), 0);
 
@@ -411,7 +563,8 @@ function Dashboard({ session }) {
     return haystack.includes(search.toLowerCase()) && (statusFilter === 'all' || client.status === statusFilter);
   }), [clients, search, statusFilter]);
 
-  const saveClient = async (payload) => {
+  const saveClient = async (payload, options = {}) => {
+    const { closeForm = true, selectClient = true } = options;
     setSaving(true);
     setError('');
     if (isDemoMode) {
@@ -420,8 +573,8 @@ function Dashboard({ session }) {
         ? clients.map((client) => client.id === normalizedPayload.id ? normalizedPayload : client)
         : [...clients, { ...normalizedPayload, id: `demo-${Date.now()}` }];
       persistDemo(next);
-      setFormClient(undefined);
-      if (normalizedPayload.id) setSelectedClient(normalizedPayload);
+      if (closeForm) setFormClient(undefined);
+      if (selectClient && normalizedPayload.id) setSelectedClient(normalizedPayload);
       setSaving(false);
       return;
     }
@@ -434,34 +587,74 @@ function Dashboard({ session }) {
     else {
       const normalizedData = normalizeClient(data);
       setClients((current) => payload.id ? current.map((client) => client.id === normalizedData.id ? normalizedData : client) : [...current, normalizedData]);
-      setSelectedClient(payload.id ? normalizedData : selectedClient);
-      setFormClient(undefined);
+      if (selectClient) setSelectedClient(payload.id ? normalizedData : selectedClient);
+      if (closeForm) setFormClient(undefined);
     }
     setSaving(false);
   };
 
-  const completeSession = async (client) => {
-    const sessionsUsed = Math.min(client.sessions_used + 1, client.sessions_total);
-    const packageComplete = sessionsUsed >= client.sessions_total;
-    const updated = {
-      ...client,
-      sessions_used: sessionsUsed,
-      next_session: packageComplete ? null : getNextScheduledSession(client, new Date(new Date(client.next_session).getTime() + 60000)),
-      payment_status: packageComplete ? 'due' : client.payment_status,
-      status: packageComplete ? 'completed' : client.status,
+  const saveAppointment = async (payload, status) => {
+    setSaving(true);
+    setError('');
+    const existing = payload.id
+      ? appointments.find((appointment) => appointment.id === payload.id)
+      : appointments.find((appointment) => appointment.client_id === payload.client_id && sameInstant(appointment.original_scheduled_start, payload.original_scheduled_start));
+    const {
+      id: _id, created_at: _createdAt, updated_at: _updatedAt, owner_id: _ownerId,
+      ...appointmentFields
+    } = payload;
+    const record = {
+      ...appointmentFields,
+      status,
+      scheduled_start: new Date(payload.scheduled_start).toISOString(),
+      original_scheduled_start: new Date(payload.original_scheduled_start).toISOString(),
+      duration_minutes: Number(payload.duration_minutes),
+      pain_level: payload.pain_level === '' ? null : Number(payload.pain_level),
+      strength_grade: payload.strength_grade === '' ? null : Number(payload.strength_grade),
     };
-    await saveClient(updated);
-    setSelectedClient(updated);
-  };
+    let savedAppointment;
 
-  const cancelSession = async (client) => {
-    const updated = {
-      ...client,
-      cancelled_sessions: (client.cancelled_sessions || 0) + 1,
-      next_session: getNextScheduledSession(client, new Date(new Date(client.next_session).getTime() + 60000)),
-    };
-    await saveClient(updated);
-    setSelectedClient(updated);
+    if (isDemoMode) {
+      savedAppointment = { ...record, id: existing?.id || `appointment-${Date.now()}` };
+      const nextAppointments = existing
+        ? appointments.map((appointment) => appointment.id === existing.id ? savedAppointment : appointment)
+        : [...appointments, savedAppointment];
+      persistDemoAppointments(nextAppointments);
+    } else {
+      const withOwner = { ...record, owner_id: session.user.id };
+      const result = existing
+        ? await supabase.from('appointments').update(withOwner).eq('id', existing.id).select().single()
+        : await supabase.from('appointments').insert(withOwner).select().single();
+      if (result.error) {
+        setError(result.error.message);
+        setSaving(false);
+        return;
+      }
+      savedAppointment = result.data;
+      setAppointments((current) => existing
+        ? current.map((appointment) => appointment.id === existing.id ? savedAppointment : appointment)
+        : [...current, savedAppointment]);
+    }
+
+    const client = clients.find((item) => item.id === payload.client_id);
+    const newlyCompleted = status === 'completed' && existing?.status !== 'completed';
+    const newlyCancelled = status === 'cancelled' && existing?.status !== 'cancelled';
+    if (client && (newlyCompleted || newlyCancelled)) {
+      const isCurrentSlot = sameInstant(client.next_session, payload.original_scheduled_start);
+      const sessionsUsed = newlyCompleted ? Math.min(client.sessions_used + 1, client.sessions_total) : client.sessions_used;
+      const packageComplete = sessionsUsed >= client.sessions_total;
+      const updatedClient = {
+        ...client,
+        sessions_used: sessionsUsed,
+        cancelled_sessions: newlyCancelled ? (client.cancelled_sessions || 0) + 1 : client.cancelled_sessions,
+        next_session: packageComplete ? null : isCurrentSlot ? getNextScheduledSession(client, new Date(new Date(payload.original_scheduled_start).getTime() + 60000)) : client.next_session,
+        payment_status: packageComplete ? 'due' : client.payment_status,
+        status: packageComplete ? 'completed' : client.status,
+      };
+      await saveClient(updatedClient, { closeForm: false, selectClient: false });
+    }
+    setSelectedAppointment(null);
+    setSaving(false);
   };
 
   const markPaid = async (client) => {
@@ -472,11 +665,15 @@ function Dashboard({ session }) {
 
   const deleteClient = async (client) => {
     if (!window.confirm(`Delete ${client.name}'s record? This cannot be undone.`)) return;
-    if (isDemoMode) persistDemo(clients.filter((item) => item.id !== client.id));
+    if (isDemoMode) {
+      persistDemo(clients.filter((item) => item.id !== client.id));
+      persistDemoAppointments(appointments.filter((appointment) => appointment.client_id !== client.id));
+    }
     else {
       const { error: deleteError } = await supabase.from('clients').delete().eq('id', client.id);
       if (deleteError) { setError(deleteError.message); return; }
       setClients((current) => current.filter((item) => item.id !== client.id));
+      setAppointments((current) => current.filter((appointment) => appointment.client_id !== client.id));
     }
     setSelectedClient(null);
   };
@@ -513,8 +710,7 @@ function Dashboard({ session }) {
           <p>Everything you need for the week, in one view.</p>
         </div>
         <div className="sidebar-account">
-          <span className="avatar">NE</span>
-          <div><strong>Nur Siti Eissya</strong><span>Physiotherapist</span></div>
+          <img className="sidebar-profile-photo" src="/pp.png" alt="Eissya" />
           <button className="icon-button" onClick={signOut} aria-label="Sign out"><LogOut /></button>
         </div>
       </aside>
@@ -552,7 +748,7 @@ function Dashboard({ session }) {
                   <div className="panel-heading"><div><p className="eyebrow">Coming up</p><h2>Next visits</h2></div><button onClick={() => setView('schedule')}>View schedule <ChevronRight /></button></div>
                   {upcoming.slice(0, 4).length ? <div className="appointment-list">
                     {upcoming.slice(0, 4).map((visit, index) => (
-                      <button className="appointment-row" key={`${visit.id}-${visit.scheduled_start}`} onClick={() => setSelectedClient(visit.sourceClient)}>
+                      <button className="appointment-row" key={`${visit.id}-${visit.schedule_key}`} onClick={() => setSelectedAppointment(visit)}>
                         <div className="date-tile"><span>{formatDate(visit.scheduled_start, { weekday: 'short' }).split(',')[0]}</span><strong>{new Date(visit.scheduled_start).getDate()}</strong></div>
                         <span className={`timeline-dot color-${index % 4}`} />
                         <div className="appointment-person"><strong>{visit.name}</strong><span>{visit.condition || visit.package_name}</span></div>
@@ -598,7 +794,7 @@ function Dashboard({ session }) {
               <PageHeading eyebrow="Appointments" title="Schedule" copy="Your upcoming home visits, sorted chronologically." />
               <section className="panel full-schedule">
                 {upcoming.length ? upcoming.map((visit) => (
-                  <button className="schedule-card" key={`${visit.id}-${visit.scheduled_start}`} onClick={() => setSelectedClient(visit.sourceClient)}>
+                  <button className="schedule-card" key={`${visit.id}-${visit.schedule_key}`} onClick={() => setSelectedAppointment(visit)}>
                     <div className="schedule-date"><span>{formatDate(visit.scheduled_start, { weekday: 'long' }).split(',')[0]}</span><strong>{new Date(visit.scheduled_start).getDate()}</strong><small>{formatDate(visit.scheduled_start, { month: 'long' }).split(' ')[1]}</small></div>
                     <div className="schedule-time"><Clock3 /><strong>{formatTime(visit.scheduled_start)}</strong><span>{durationLabel(visit.session_duration_minutes)}</span></div>
                     <span className="avatar">{getInitials(visit.name)}</span>
@@ -614,7 +810,16 @@ function Dashboard({ session }) {
       </main>
 
       {formClient !== undefined && <ClientForm client={formClient} onClose={() => setFormClient(undefined)} onSave={saveClient} saving={saving} />}
-      {selectedClient && formClient === undefined && <ClientDetails client={selectedClient} onClose={() => setSelectedClient(null)} onEdit={() => setFormClient(selectedClient)} onComplete={() => completeSession(selectedClient)} onCancelSession={() => cancelSession(selectedClient)} onMarkPaid={() => markPaid(selectedClient)} onDelete={() => deleteClient(selectedClient)} />}
+      {selectedAppointment && <AppointmentCard visit={selectedAppointment} onClose={() => setSelectedAppointment(null)} onSave={saveAppointment} saving={saving} />}
+      {selectedClient && formClient === undefined && !selectedAppointment && <ClientDetails
+        client={selectedClient}
+        appointments={appointments.filter((appointment) => appointment.client_id === selectedClient.id).sort((a, b) => new Date(b.scheduled_start) - new Date(a.scheduled_start))}
+        onClose={() => setSelectedClient(null)}
+        onEdit={() => setFormClient(selectedClient)}
+        onOpenAppointment={(visit) => { setSelectedClient(null); setSelectedAppointment(visit); }}
+        onMarkPaid={() => markPaid(selectedClient)}
+        onDelete={() => deleteClient(selectedClient)}
+      />}
     </div>
   );
 }

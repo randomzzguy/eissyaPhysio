@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Eissya Physio — Home Visit Physiotherapy, Ipoh</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -176,12 +177,11 @@
   @keyframes spin{to{transform:rotate(360deg);}}
   .avatar-inner{
     width:250px; height:250px; border-radius:50%; background:var(--white);
-    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
     animation:spin-reverse 24s linear infinite;
   }
   @keyframes spin-reverse{to{transform:rotate(-360deg);}}
-  .avatar-inner .initials{font-family:'Fraunces',serif; font-size:3.2rem; font-weight:600;}
-  .avatar-inner .role{font-size:.72rem; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; font-weight:600; margin-top:4px;}
+  .about-photo{width:100%; height:100%; border-radius:50%; display:block; object-fit:cover;}
 
   .orbit-badge{
     position:absolute; background:var(--white); box-shadow:0 8px 24px rgba(0,0,0,0.08);
@@ -244,29 +244,31 @@
 
   /* ───── PACKAGES ───── */
   #packages{background:var(--white);}
-  .packages-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:60px;}
+  .packages-grid{display:grid; grid-template-columns:repeat(3,1fr); align-items:stretch; gap:26px; margin-top:60px;}
   .pkg-card{
     border-radius:28px; padding:38px 32px; position:relative; overflow:hidden;
-    transition:transform .5s var(--ease), box-shadow .5s var(--ease);
+    isolation:isolate; display:flex; flex-direction:column; height:100%;
+    transition:transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease);
   }
-  .pkg-card:hover{transform:translateY(-10px); box-shadow:0 26px 50px rgba(0,0,0,0.14);}
+  .pkg-card:hover{transform:translateY(-10px) scale(1.015); box-shadow:0 26px 52px rgba(63,46,51,.16);}
   .pkg-card::after{
-    content:''; position:absolute; top:-60%; left:-60%; width:220%; height:220%;
-    background:radial-gradient(circle, rgba(255,255,255,.5) 0%, transparent 60%);
-    opacity:0; transition:opacity .5s;
+    content:''; position:absolute; z-index:0; left:8%; right:8%; bottom:-48px; height:120px;
+    border-radius:50%; opacity:0; transform:translateY(22px) scale(.85);
+    filter:blur(22px); transition:opacity .45s var(--ease), transform .45s var(--ease);
   }
-  .pkg-card:hover::after{opacity:1;}
+  .pkg-card > *{position:relative; z-index:1;}
+  .pkg-card:hover::after{opacity:.48; transform:translateY(0) scale(1);}
   .pkg-card.pink{background:#fff0f3; border:2px solid var(--pink);}
-  .pkg-card.blue{background:#eef8fc; border:2px solid var(--blue); transform:translateY(-14px);}
-  .pkg-card.blue:hover{transform:translateY(-22px);}
+  .pkg-card.blue{background:#eef8fc; border:2px solid var(--blue);}
   .pkg-card.green{background:#f1faef; border:2px solid var(--green);}
+  .pkg-card.pink::after{background:var(--pink);}
+  .pkg-card.blue::after{background:var(--blue);}
+  .pkg-card.green::after{background:var(--green);}
 
   .pkg-popular{
     position:absolute; top:22px; right:22px; background:var(--yellow); font-size:.7rem; font-weight:700;
     letter-spacing:.06em; text-transform:uppercase; padding:5px 13px; border-radius:50px;
-    animation:pulse-badge 2.4s ease-in-out infinite;
   }
-  @keyframes pulse-badge{0%,100%{transform:scale(1);} 50%{transform:scale(1.08);}}
 
   .pkg-name{font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; margin-bottom:6px;}
   .pkg-tagline{font-size:.85rem; color:var(--muted); margin-bottom:26px; font-weight:300;}
@@ -276,7 +278,7 @@
   .pkg-price .per{font-size:.85rem; color:var(--muted); margin-top:6px;}
   .pkg-price .note{font-size:.76rem; color:var(--muted); margin-top:5px; font-style:italic;}
 
-  .pkg-features{list-style:none; margin-bottom:30px;}
+  .pkg-features{list-style:none; margin-bottom:30px; flex:1;}
   .pkg-features li{
     font-size:.87rem; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.06);
     display:flex; align-items:center; gap:9px; font-weight:400; opacity:0; transform:translateX(-10px);
@@ -388,8 +390,6 @@
     .steps-row{grid-template-columns:repeat(2,1fr); gap:40px 0;}
     .steps-row::before{display:none;}
     .packages-grid{grid-template-columns:1fr;}
-    .pkg-card.blue{transform:none;}
-    .pkg-card.blue:hover{transform:translateY(-10px);}
     .cond-grid{grid-template-columns:repeat(2,1fr);}
     .contact-layout{grid-template-columns:1fr; gap:44px;}
   }
@@ -464,8 +464,7 @@
       <div class="about-visual reveal-scale">
         <div class="avatar-ring">
           <div class="avatar-inner">
-            <div class="initials">NE</div>
-            <div class="role">Physiotherapist</div>
+            <img class="about-photo" src="pp.png" alt="Nur Siti Eissya, physiotherapist" />
           </div>
         </div>
         <div class="orbit-badge orbit1">🎓 BSc (Hons)</div>
@@ -507,7 +506,7 @@
   <div class="section-inner">
     <div class="reveal">
       <div class="section-label">The Process</div>
-      <h2 class="section-title">Simple, from first message<br>to your first session.</h2>
+      <h2 class="section-title">From your first message<br>to your first session.</h2>
       <p class="section-sub">Getting started is easy. Here's what happens when you reach out.</p>
     </div>
 
@@ -550,7 +549,7 @@
         <div class="pkg-name">Single Session</div>
         <div class="pkg-tagline">Try it out or a one-off concern</div>
         <div class="pkg-price">
-          <div class="amount"><span class="cur">RM</span><span class="count" data-target="120">0</span></div>
+          <div class="amount"><span class="cur">RM</span><span class="count" data-target="140">0</span></div>
           <div class="per">per session</div>
           <div class="note">+ transport fees apply</div>
         </div>
@@ -564,12 +563,11 @@
       </div>
 
       <div class="pkg-card blue reveal-scale" style="transition-delay:.1s">
-        <div class="pkg-popular">Most Popular</div>
         <div class="pkg-name">Trial Pack</div>
         <div class="pkg-tagline">3 sessions to feel the difference</div>
         <div class="pkg-price">
-          <div class="amount"><span class="cur">RM</span><span class="count" data-target="330">0</span></div>
-          <div class="per">RM 110 per session · save RM 30</div>
+          <div class="amount"><span class="cur">RM</span><span class="count" data-target="400">0</span></div>
+          <div class="per">RM 133 per session · save RM 20</div>
           <div class="note">+ transport fees apply</div>
         </div>
         <ul class="pkg-features">
@@ -582,11 +580,12 @@
       </div>
 
       <div class="pkg-card green reveal-scale" style="transition-delay:.2s">
+        <div class="pkg-popular">Most Popular</div>
         <div class="pkg-name">Progress Pack</div>
         <div class="pkg-tagline">For ongoing rehab & steady recovery</div>
         <div class="pkg-price">
-          <div class="amount"><span class="cur">RM</span><span class="count" data-target="600">0</span></div>
-          <div class="per">6 sessions · RM 100 per session</div>
+          <div class="amount"><span class="cur">RM</span><span class="count" data-target="1000">0</span></div>
+          <div class="per">8 sessions · RM 125 per session · save RM 120</div>
           <div class="note">+ transport fees apply</div>
         </div>
         <ul class="pkg-features">
@@ -595,7 +594,7 @@
           <li style="--fi:2">Priority scheduling</li>
           <li style="--fi:3">End-of-program progress review</li>
         </ul>
-        <a href="https://wa.me/60103890319?text=Hi%20Eissya!%20I%27m%20interested%20in%20the%20Progress%20Pack%20(6%20sessions)." target="_blank" class="pkg-btn">Book This Pack</a>
+        <a href="https://wa.me/60103890319?text=Hi%20Eissya!%20I%27m%20interested%20in%20the%20Progress%20Pack%20(8%20sessions)." target="_blank" class="pkg-btn">Book This Pack</a>
       </div>
     </div>
     <p class="pkg-disclaimer reveal">All prices are in Malaysian Ringgit (MYR). Transport fees vary by distance within Ipoh, Perak and are confirmed before booking.</p>
