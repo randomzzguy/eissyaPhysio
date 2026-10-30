@@ -711,6 +711,7 @@ function Dashboard({ session }) {
         </div>
         <div className="sidebar-account">
           <img className="sidebar-profile-photo" src="/pp.png" alt="Eissya" />
+          <div className="sidebar-account-copy"><strong>Nur Siti Eissya</strong><span>Physiotherapist</span></div>
           <button className="icon-button" onClick={signOut} aria-label="Sign out"><LogOut /></button>
         </div>
       </aside>
