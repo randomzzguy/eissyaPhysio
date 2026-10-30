@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <meta name="theme-color" content="#FEFBF9"/>
 <title>Eissya Physio — Home Visit Physiotherapy, Ipoh</title>
+<meta name="description" content="One-to-one home physiotherapy in Ipoh with Nur Siti Eissya. Support for stroke recovery, older adults and mobility concerns. View clear prices and enquire on WhatsApp."/>
+<link rel="canonical" href="https://eissya.site/"/>
+<meta property="og:type" content="website"/><meta property="og:title" content="Home Physiotherapy in Ipoh | Eissya Physio"/><meta property="og:description" content="One-to-one physiotherapy at home in Ipoh. Explore services, prices and direct WhatsApp booking."/><meta property="og:url" content="https://eissya.site/"/><meta property="og:image" content="https://eissya.site/pp.png"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://eissya.site/#website","url":"https://eissya.site/","name":"Eissya Physio"},{"@type":"Organization","@id":"https://eissya.site/#business","name":"Eissya Physio","url":"https://eissya.site/","telephone":"+60103890319","areaServed":{"@type":"City","name":"Ipoh"},"founder":{"@id":"https://eissya.site/#eissya"}},{"@type":"Person","@id":"https://eissya.site/#eissya","name":"Nur Siti Eissya","jobTitle":"Physiotherapist","alumniOf":{"@type":"CollegeOrUniversity","name":"INTI International University"},"worksFor":{"@id":"https://eissya.site/#business"}},{"@type":"WebPage","@id":"https://eissya.site/#page","url":"https://eissya.site/","name":"Home Physiotherapy in Ipoh | Eissya Physio","isPartOf":{"@id":"https://eissya.site/#website"},"about":{"@id":"https://eissya.site/#business"}}]}</script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -24,13 +28,17 @@
   body{min-width:0; min-height:100%; font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:clip;}
   img,svg{max-width:100%;}
   a,button{touch-action:manipulation; -webkit-tap-highlight-color:transparent;}
+  a:focus-visible,button:focus-visible{outline:3px solid #3383a1;outline-offset:3px;}
+  .skip-link{position:fixed;top:-100px;left:12px;z-index:300;background:white;padding:10px 15px;}
+  .skip-link:focus{top:12px;}
+  a.cond-card{display:block;text-decoration:none;color:inherit;}
 
   ::selection{background:var(--pink);color:var(--text);}
 
   /* ───── scroll reveal base ───── */
-  .reveal{opacity:0; transform:translateY(28px); transition:opacity .8s var(--ease), transform .8s var(--ease);}
+  .reveal{opacity:1; transform:none; transition:opacity .8s var(--ease), transform .8s var(--ease);}
   .reveal.visible{opacity:1; transform:translateY(0);}
-  .reveal-scale{opacity:0; transform:scale(.92); transition:opacity .7s var(--ease), transform .7s var(--ease);}
+  .reveal-scale{opacity:1; transform:none; transition:opacity .7s var(--ease), transform .7s var(--ease);}
   .reveal-scale.visible{opacity:1; transform:scale(1);}
 
   /* ───── NAV ───── */
@@ -47,6 +55,7 @@
     box-shadow:0 4px 24px rgba(0,0,0,0.05);
   }
   .nav-logo{font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600;}
+  a.nav-logo{text-decoration:none;color:var(--text);}
   .nav-logo .dot{color:var(--pink-d); display:inline-block; animation:pulse-dot 2.4s ease-in-out infinite;}
   @keyframes pulse-dot{0%,100%{transform:scale(1);} 50%{transform:scale(1.4);}}
 
@@ -284,7 +293,7 @@
   .pkg-features{list-style:none; margin-bottom:30px; flex:1;}
   .pkg-features li{
     font-size:.87rem; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.06);
-    display:flex; align-items:center; gap:9px; font-weight:400; opacity:0; transform:translateX(-10px);
+    display:flex; align-items:center; gap:9px; font-weight:400; opacity:1; transform:none;
   }
   .pkg-card.visible .pkg-features li{animation:featIn .5s var(--ease) forwards; animation-delay:calc(var(--fi,0)*80ms + .3s);}
   @keyframes featIn{to{opacity:1; transform:translateX(0);}}
@@ -388,7 +397,7 @@
 
   /* ───── RESPONSIVE ───── */
   @media (max-width:900px){
-    .nav-links{display:none;}
+    .nav-links{display:flex;position:absolute;top:100%;left:0;right:0;overflow-x:auto;white-space:nowrap;background:rgba(254,251,249,.96);padding:8px 12px;box-shadow:0 8px 16px rgba(0,0,0,.04);}
     .about-layout{grid-template-columns:1fr; gap:50px;}
     .about-visual{order:-1;}
     .steps-row{grid-template-columns:repeat(2,1fr); gap:40px 0;}
@@ -466,19 +475,21 @@
 </head>
 <body>
 
-<nav id="nav">
-  <div class="nav-logo">Eissya<span class="dot">•</span>Physio</div>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav id="nav" aria-label="Main navigation">
+  <a class="nav-logo" href="/">Eissya<span class="dot">•</span>Physio</a>
   <ul class="nav-links">
     <li><a href="#about" data-sec="about">About</a></li>
     <li><a href="#how" data-sec="how">Process</a></li>
     <li><a href="#packages" data-sec="packages">Packages</a></li>
     <li><a href="#conditions" data-sec="conditions">Conditions</a></li>
+    <li><a href="/home-physiotherapy-ipoh/">Home visits</a></li>
   </ul>
   <a href="#contact" class="nav-cta">Book Now</a>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
+<main id="main"><section class="hero">
   <div class="blob blob1"></div>
   <div class="blob blob2"></div>
   <div class="blob blob3"></div>
@@ -495,10 +506,10 @@
     <span class="word" style="animation-delay:.45s"><em>your door<svg viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M2 10 Q 50 2, 100 8 T 198 6" stroke="#F9B8C4" stroke-width="4" fill="none" stroke-linecap="round"/></svg></em></span><span class="word" style="animation-delay:.5s">.</span>
   </h1>
 
-  <p class="hero-desc">Professional physiotherapy sessions in the comfort of your own home — no clinics, no waiting rooms, just personalised, hands-on care wherever you are in Ipoh.</p>
+  <p class="hero-desc">One-to-one home physiotherapy in Ipoh with Nur Siti Eissya. Support for stroke recovery, older adults and mobility concerns, with clear prices and direct booking.</p>
 
   <div class="hero-btns">
-    <a href="https://wa.me/60103890319?text=Hi%20Eissya!%20I%27d%20like%20to%20book%20a%20home%20visit%20physio%20session." target="_blank" class="btn btn-primary">💬 WhatsApp to Book</a>
+    <a href="https://wa.me/60103890319?text=Hi%20Eissya%2C%20I%27d%20like%20to%20ask%20about%20a%20home%20physiotherapy%20visit%20in%20Ipoh.%20The%20patient%27s%20area%20is%3A%20" target="_blank" rel="noopener" class="btn btn-primary">💬 WhatsApp to Book</a>
     <a href="#packages" class="btn btn-secondary">View Packages →</a>
   </div>
 
@@ -532,14 +543,14 @@
       </div>
 
       <div class="about-text">
-        <p class="reveal">Hi, I'm <strong>Nur Siti Eissya</strong> — a qualified physiotherapist with over 1.5 years of hands-on clinical experience managing musculoskeletal, geriatric, neurological, and pain-related conditions in a private rehabilitation setting in Ipoh.</p>
+        <p class="reveal">Hi, I'm <strong>Nur Siti Eissya</strong> — a physiotherapist with approximately 1.5 years of clinical experience with musculoskeletal, geriatric, neurological and pain-related concerns in Ipoh.</p>
         <p class="reveal">I believe recovery shouldn't be held back by logistics. That's why I bring the clinic to you — designing progressive, personalised rehabilitation programs in the environment where you'll actually do your exercises and live your daily life.</p>
-        <p class="reveal">Whether you're managing chronic pain, recovering mobility after a stroke, or simply want to move better as you age — I'm here to help you get there, at your own pace, in your own space.</p>
+        <p class="reveal">Whether you are seeking help with mobility after a stroke, moving with more confidence as you age, or managing pain, we can discuss goals that suit your circumstances. <a href="/about/">Read more about Eissya</a>.</p>
 
         <div class="cred-row reveal">
           <div class="cred-chip">
             <div class="cc-title">BSc (Hons) Physiotherapy</div>
-            <div class="cc-sub">INTI International University · 2019–2024</div>
+            <div class="cc-sub">INTI International University</div>
           </div>
           <div class="cred-chip">
             <div class="cc-title">Prime Motion Physio Centre</div>
@@ -583,7 +594,7 @@
       <div class="step reveal" style="transition-delay:.25s">
         <div class="step-circle" style="background:#fffbea;">🏠<span class="step-num">3</span></div>
         <h3>Eissya Comes to You</h3>
-        <p>She arrives at your home fully equipped for your assessment and session.</p>
+        <p>Eissya arrives for an assessment and plans the session around your needs and home setting.</p>
       </div>
       <div class="step reveal" style="transition-delay:.35s">
         <div class="step-circle" style="background:#f1faef;">💪<span class="step-num">4</span></div>
@@ -608,7 +619,7 @@
         <div class="pkg-name">Single Session</div>
         <div class="pkg-tagline">Try it out or a one-off concern</div>
         <div class="pkg-price">
-          <div class="amount"><span class="cur">RM</span><span class="count" data-target="140">0</span></div>
+          <div class="amount"><span class="cur">RM</span><span class="count">140</span></div>
           <div class="per">per session</div>
           <div class="note">+ transport fees apply</div>
         </div>
@@ -623,40 +634,40 @@
 
       <div class="pkg-card blue reveal-scale" style="transition-delay:.1s">
         <div class="pkg-name">Trial Pack</div>
-        <div class="pkg-tagline">3 sessions to feel the difference</div>
+        <div class="pkg-tagline">Three one-to-one home visits</div>
         <div class="pkg-price">
-          <div class="amount"><span class="cur">RM</span><span class="count" data-target="400">0</span></div>
-          <div class="per">RM 133 per session · save RM 20</div>
+          <div class="amount"><span class="cur">RM</span><span class="count">400</span></div>
+          <div class="per">3 sessions · approximately RM 133.33 per session</div>
           <div class="note">+ transport fees apply</div>
         </div>
         <ul class="pkg-features">
           <li style="--fi:0">Everything in Single Session</li>
           <li style="--fi:1">Progress tracking across visits</li>
           <li style="--fi:2">Adjusted plan each session</li>
-          <li style="--fi:3">WhatsApp support between visits</li>
+          <li style="--fi:3">Home exercise guidance</li>
         </ul>
         <a href="https://wa.me/60103890319?text=Hi%20Eissya!%20I%27m%20interested%20in%20the%20Trial%20Pack%20(3%20sessions)." target="_blank" class="pkg-btn">Book This Pack</a>
       </div>
 
       <div class="pkg-card green reveal-scale" style="transition-delay:.2s">
-        <div class="pkg-popular">Most Popular</div>
+        <div class="pkg-popular">Best Choice</div>
         <div class="pkg-name">Progress Pack</div>
-        <div class="pkg-tagline">For ongoing rehab & steady recovery</div>
+        <div class="pkg-tagline">For an ongoing rehabilitation plan</div>
         <div class="pkg-price">
-          <div class="amount"><span class="cur">RM</span><span class="count" data-target="1000">0</span></div>
+          <div class="amount"><span class="cur">RM</span><span class="count">1,000</span></div>
           <div class="per">8 sessions · RM 125 per session · save RM 120</div>
           <div class="note">+ transport fees apply</div>
         </div>
         <ul class="pkg-features">
           <li style="--fi:0">Everything in the Trial Pack</li>
           <li style="--fi:1">Comprehensive rehab program design</li>
-          <li style="--fi:2">Priority scheduling</li>
+          <li style="--fi:2">Plan adjusted to your goals</li>
           <li style="--fi:3">End-of-program progress review</li>
         </ul>
         <a href="https://wa.me/60103890319?text=Hi%20Eissya!%20I%27m%20interested%20in%20the%20Progress%20Pack%20(8%20sessions)." target="_blank" class="pkg-btn">Book This Pack</a>
       </div>
     </div>
-    <p class="pkg-disclaimer reveal">All prices are in Malaysian Ringgit (MYR). Transport fees vary by distance within Ipoh, Perak and are confirmed before booking.</p>
+    <p class="pkg-disclaimer reveal">All prices are in Malaysian Ringgit (MYR). Transport fees vary by distance within Ipoh, Perak; the exact fee is confirmed before booking. <a href="/pricing/">Full pricing details</a>.</p>
   </div>
 </section>
 
@@ -671,12 +682,13 @@
 
     <div class="cond-grid">
       <div class="cond-card reveal" style="transition-delay:.02s"><div class="cc-bg"></div><div class="cond-icon">🦴</div><h4>Low Back Pain</h4><p>Chronic or acute, postural or disc-related</p></div>
-      <div class="cond-card reveal" style="transition-delay:.08s"><div class="cc-bg"></div><div class="cond-icon">🧠</div><h4>Stroke Recovery</h4><p>Neurological rehab & regaining mobility</p></div>
+      <a href="/stroke-rehabilitation-ipoh/" class="cond-card reveal" style="transition-delay:.08s"><div class="cc-bg"></div><div class="cond-icon">🧠</div><h4>Stroke Rehabilitation</h4><p>Explore home-based movement and mobility support</p></a>
       <div class="cond-card reveal" style="transition-delay:.14s"><div class="cc-bg"></div><div class="cond-icon">🦵</div><h4>Knee & Osteoarthritis</h4><p>Pain management and functional mobility</p></div>
-      <div class="cond-card reveal" style="transition-delay:.2s"><div class="cc-bg"></div><div class="cond-icon">🧓</div><h4>Geriatric Rehab</h4><p>Balance, mobility & fall prevention</p></div>
+      <a href="/elderly-physiotherapy-ipoh/" class="cond-card reveal" style="transition-delay:.2s"><div class="cc-bg"></div><div class="cond-icon">🧓</div><h4>Older Adults</h4><p>Learn about mobility, balance and strength at home</p></a>
       <div class="cond-card reveal" style="transition-delay:.26s"><div class="cc-bg"></div><div class="cond-icon">💆</div><h4>Neck & Shoulder</h4><p>Stiffness, tension & restricted movement</p></div>
       <div class="cond-card reveal" style="transition-delay:.32s"><div class="cc-bg"></div><div class="cond-icon">🤲</div><h4>Manual Therapy</h4><p>Hands-on mobilisation & soft tissue work</p></div>
     </div>
+    <p class="pkg-disclaimer"><a href="/home-physiotherapy-ipoh/">Learn about home visits</a> · <a href="/how-home-physiotherapy-works/">What to expect</a> · <a href="/faq/">More questions</a></p>
   </div>
 </section>
 
@@ -702,7 +714,7 @@
           <svg class="wa-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Chat on WhatsApp
         </a>
-        <p class="contact-note">Typically replies within a few hours</p>
+        <p class="contact-note">Home visits within Ipoh only · <a href="/contact/">Contact details</a></p>
       </div>
 
       <div class="contact-right reveal">
@@ -732,10 +744,11 @@
       </div>
     </div>
   </div>
-</section>
+</section></main>
 
 <footer>
   <p>© <span id="copyright-year">2026</span> Nur Siti Eissya · Home Visit Physiotherapy · Ipoh, Perak &nbsp;·&nbsp; <a href="https://wa.me/60103890319" target="_blank" rel="noopener">+60-10-389 0319</a></p>
+  <p><a href="/home-physiotherapy-ipoh/">Home visits</a> · <a href="/stroke-rehabilitation-ipoh/">Stroke rehabilitation</a> · <a href="/elderly-physiotherapy-ipoh/">Older adults</a> · <a href="/pricing/">Pricing</a> · <a href="/faq/">FAQs</a></p>
 </footer>
 
 <script>
@@ -768,27 +781,6 @@
     });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal, .reveal-scale, .pkg-card').forEach(el => revealObserver.observe(el));
-
-  // ── price count-up ──
-  const countObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const target = parseInt(el.dataset.target, 10);
-        const duration = 1200;
-        const start = performance.now();
-        function tick(now) {
-          const p = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = Math.round(eased * target);
-          if (p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-        countObserver.unobserve(el);
-      }
-    });
-  }, { threshold: 0.4 });
-  document.querySelectorAll('.count').forEach(el => countObserver.observe(el));
 
   // ── FAQ accordion ──
   document.querySelectorAll('.faq-item').forEach(item => {
