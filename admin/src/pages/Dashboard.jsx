@@ -526,6 +526,24 @@ function Dashboard({ session }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const hasOverlay = menuOpen || formClient !== undefined || Boolean(selectedClient) || Boolean(selectedAppointment);
+    document.body.classList.toggle('scroll-locked', hasOverlay);
+    return () => document.body.classList.remove('scroll-locked');
+  }, [menuOpen, formClient, selectedClient, selectedAppointment]);
+
+  useEffect(() => {
+    const closeTopLayer = (event) => {
+      if (event.key !== 'Escape') return;
+      if (selectedAppointment) setSelectedAppointment(null);
+      else if (formClient !== undefined) setFormClient(undefined);
+      else if (selectedClient) setSelectedClient(null);
+      else setMenuOpen(false);
+    };
+    document.addEventListener('keydown', closeTopLayer);
+    return () => document.removeEventListener('keydown', closeTopLayer);
+  }, [formClient, selectedClient, selectedAppointment]);
+
+  useEffect(() => {
     if (isDemoMode) return undefined;
     let active = true;
     Promise.all([
@@ -697,7 +715,7 @@ function Dashboard({ session }) {
           <button className="icon-button mobile-close" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X /></button>
         </div>
         <p className="workspace-label">Practice workspace</p>
-        <nav>
+        <nav aria-label="Practice portal">
           {navItems.map(({ id, label, icon: Icon, count }) => (
             <button className={view === id ? 'active' : ''} onClick={() => { setView(id); setMenuOpen(false); }} key={id}>
               <Icon aria-hidden="true" /><span>{label}</span>{count !== undefined && <b>{count}</b>}
@@ -719,7 +737,7 @@ function Dashboard({ session }) {
 
       <main className="dashboard-main">
         <header className="topbar">
-          <button className="icon-button menu-button" onClick={() => setMenuOpen(true)} aria-label="Open menu"><Menu /></button>
+          <button className="icon-button menu-button" onClick={() => setMenuOpen(true)} aria-label="Open menu" aria-expanded={menuOpen}><Menu /></button>
           <div className="topbar-search">
             <Search aria-hidden="true" />
             <input value={search} onChange={(event) => setSearch(event.target.value)} onFocus={() => setView('clients')} placeholder="Search clients, conditions or packages…" />
@@ -844,12 +862,12 @@ function ClientTable({ clients, title, onSelect, onViewAll, loading }) {
             <tbody>{clients.map((client) => {
               const remaining = Math.max(client.sessions_total - client.sessions_used, 0);
               return <tr key={client.id} onClick={() => onSelect(client)}>
-                <td><div className="client-cell"><span className="avatar">{getInitials(client.name)}</span><span><strong>{client.name}</strong><small>{client.condition || client.phone}</small></span></div></td>
-                <td><span className={`package-pill ${client.package_name.toLowerCase().replaceAll(' ', '-')}`}>{client.package_name}</span></td>
-                <td><SessionDots total={client.sessions_total} used={client.sessions_used} /></td>
-                <td><strong className="cell-date">{client.next_session ? formatDate(client.next_session, { year: undefined }) : 'Not scheduled'}</strong><small>{client.next_session ? `${formatTime(client.next_session)} · ${durationLabel(client.session_duration_minutes)}` : scheduleLabel(client)}</small></td>
-                <td><span className={`payment-state ${client.payment_status}`}>{client.payment_status === 'due' ? `${formatMoney(client.package_price)} due` : client.payment_status === 'paid' ? 'Paid' : `After ${remaining} session${remaining === 1 ? '' : 's'}`}</span></td>
-                <td><button className="icon-button more-button" onClick={(e) => { e.stopPropagation(); onSelect(client); }} aria-label={`Open ${client.name}`}><MoreHorizontal /></button></td>
+                <td data-label="Client"><div className="client-cell"><span className="avatar">{getInitials(client.name)}</span><span><strong>{client.name}</strong><small>{client.condition || client.phone}</small></span></div></td>
+                <td data-label="Package"><span className={`package-pill ${client.package_name.toLowerCase().replaceAll(' ', '-')}`}>{client.package_name}</span></td>
+                <td data-label="Sessions"><SessionDots total={client.sessions_total} used={client.sessions_used} /></td>
+                <td data-label="Next visit"><span><strong className="cell-date">{client.next_session ? formatDate(client.next_session, { year: undefined }) : 'Not scheduled'}</strong><small>{client.next_session ? `${formatTime(client.next_session)} · ${durationLabel(client.session_duration_minutes)}` : scheduleLabel(client)}</small></span></td>
+                <td data-label="Payment"><span className={`payment-state ${client.payment_status}`}>{client.payment_status === 'due' ? `${formatMoney(client.package_price)} due` : client.payment_status === 'paid' ? 'Paid' : `After ${remaining} session${remaining === 1 ? '' : 's'}`}</span></td>
+                <td data-label="Actions"><button className="icon-button more-button" onClick={(e) => { e.stopPropagation(); onSelect(client); }} aria-label={`Open ${client.name}`}><MoreHorizontal /></button></td>
               </tr>;
             })}</tbody>
           </table>

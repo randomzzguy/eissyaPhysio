@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#FEFBF9"/>
 <title>Eissya Physio — Home Visit Physiotherapy, Ipoh</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -19,8 +20,10 @@
     --ease:cubic-bezier(.22,1,.36,1);
   }
 
-  html{scroll-behavior:smooth;}
-  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
+  html{scroll-behavior:smooth; scroll-padding-top:84px; overflow-x:clip; -webkit-text-size-adjust:100%;}
+  body{min-width:0; min-height:100%; font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:clip;}
+  img,svg{max-width:100%;}
+  a,button{touch-action:manipulation; -webkit-tap-highlight-color:transparent;}
 
   ::selection{background:var(--pink);color:var(--text);}
 
@@ -34,13 +37,13 @@
   nav{
     position:fixed; top:0; left:0; right:0; z-index:200;
     display:flex; align-items:center; justify-content:space-between;
-    padding:18px 40px;
+    padding:calc(18px + env(safe-area-inset-top)) max(40px, env(safe-area-inset-right)) 18px max(40px, env(safe-area-inset-left));
     transition:background .4s var(--ease), padding .4s var(--ease), box-shadow .4s var(--ease);
   }
   nav.scrolled{
     background:rgba(254,251,249,0.85);
     backdrop-filter:blur(14px);
-    padding:12px 40px;
+    padding:calc(12px + env(safe-area-inset-top)) max(40px, env(safe-area-inset-right)) 12px max(40px, env(safe-area-inset-left));
     box-shadow:0 4px 24px rgba(0,0,0,0.05);
   }
   .nav-logo{font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600;}
@@ -65,9 +68,9 @@
 
   /* ───── HERO ───── */
   .hero{
-    min-height:100vh; position:relative; overflow:hidden;
+    min-height:100vh; min-height:100svh; position:relative; overflow:hidden;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; padding:140px 24px 80px;
+    text-align:center; padding:calc(132px + env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(112px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
   }
 
   .blob{position:absolute; border-radius:50%; filter:blur(4px); opacity:.55; z-index:0;}
@@ -142,7 +145,7 @@
   @keyframes float{0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);}}
 
   .scroll-cue{
-    position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+    position:absolute; bottom:max(26px, env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%);
     display:flex; flex-direction:column; align-items:center; gap:8px; z-index:1;
     color:var(--muted); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
     opacity:0; animation:fadeUp .8s var(--ease) 1.3s forwards;
@@ -364,6 +367,7 @@
   .faq-q{
     padding:18px 0; font-weight:600; font-size:.9rem; cursor:pointer;
     display:flex; align-items:center; justify-content:space-between; gap:12px;
+    width:100%; border:0; background:transparent; color:inherit; text-align:left; font-family:inherit;
   }
   .faq-q .plus{width:22px; height:22px; flex-shrink:0; position:relative; transition:transform .4s var(--ease);}
   .faq-q .plus::before, .faq-q .plus::after{content:''; position:absolute; background:var(--white); border-radius:2px;}
@@ -378,7 +382,7 @@
   .faq-item.open .faq-a{max-height:140px; padding-bottom:18px;}
 
   /* ───── FOOTER ───── */
-  footer{background:#181616; color:rgba(255,255,255,.32); text-align:center; padding:30px 24px; font-size:.8rem;}
+  footer{background:#181616; color:rgba(255,255,255,.32); text-align:center; padding:30px max(24px, env(safe-area-inset-right)) calc(30px + env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); font-size:.8rem;}
   footer a{color:rgba(255,255,255,.5); text-decoration:none; transition:color .3s;}
   footer a:hover{color:var(--pink);}
 
@@ -394,14 +398,69 @@
     .contact-layout{grid-template-columns:1fr; gap:44px;}
   }
   @media (max-width:600px){
-    section{padding:80px 20px;}
-    nav{padding:14px 20px;}
+    html{scroll-padding-top:76px;}
+    section{padding:76px max(20px, env(safe-area-inset-right)) 76px max(20px, env(safe-area-inset-left));}
+    nav,
+    nav.scrolled{padding:calc(12px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));}
+    nav{background:rgba(254,251,249,.84); backdrop-filter:blur(14px); border-bottom:1px solid rgba(0,0,0,.035);}
+    .nav-logo{font-size:1.05rem;}
+    .nav-cta{min-height:44px; padding:0 18px; display:inline-flex; align-items:center;}
+    .hero{min-height:100svh; justify-content:flex-start; padding-top:calc(108px + env(safe-area-inset-top)); padding-bottom:50px;}
+    .hero-eyebrow{margin-bottom:20px; padding:7px 14px; font-size:.72rem;}
+    .hero h1{font-size:clamp(2.35rem,12vw,3.35rem); line-height:1.04; margin-bottom:20px;}
+    .hero-desc{font-size:.96rem; line-height:1.7; margin-bottom:28px;}
+    .hero-btns{width:100%; max-width:360px; gap:10px;}
+    .btn{width:100%; min-height:52px; padding:12px 20px; justify-content:center;}
+    .hero-pills{margin-top:32px; gap:8px;}
+    .hero-pills .float-pill{padding:8px 12px; font-size:.72rem; opacity:1; transform:none; animation:none;}
+    .scroll-cue{display:none;}
+    .blob1{width:300px; height:300px;}
+    .blob2{width:280px; height:280px;}
+    .blob3{width:190px; height:190px; left:52%;}
+    .blob4{width:150px; height:150px;}
+    .about-layout{margin-top:44px;}
+    .about-visual{width:min(100%,320px); margin-inline:auto;}
+    .avatar-ring{width:238px; height:238px;}
+    .avatar-inner{width:212px; height:212px;}
+    .orbit-badge{padding:8px 12px; font-size:.7rem;}
+    .orbit1{top:-8px; right:0;}
+    .orbit2{bottom:18px; left:0;}
+    .orbit3{bottom:-12px; right:10px;}
     .cred-row{flex-direction:column;}
+    .cred-chip{min-width:0; width:100%;}
+    .steps-row{grid-template-columns:1fr; gap:36px; margin-top:44px;}
+    .step{max-width:340px; margin-inline:auto;}
+    .packages-grid,.cond-grid,.contact-layout{margin-top:44px;}
+    .pkg-card{padding:32px 24px; border-radius:22px;}
+    .pkg-card.green{padding-top:76px;}
+    .pkg-popular{top:22px; left:24px; right:auto;}
     .cond-grid{grid-template-columns:1fr;}
+    .cond-card{padding:25px 22px;}
+    .contact-item{align-items:flex-start; padding:16px;}
+    .contact-item > div:last-child{min-width:0;}
+    .ci-value{overflow-wrap:anywhere;}
+    .wa-btn{min-height:58px; padding:14px 20px;}
+    .faq-q{min-height:58px;}
+    footer p{max-width:320px; margin-inline:auto;}
+  }
+
+  @media (max-width:360px){
+    .hero h1{font-size:2.25rem;}
+    .hero-pills{max-width:290px;}
+    .float-pill{font-size:.68rem;}
+    .avatar-ring{width:216px; height:216px;}
+    .avatar-inner{width:192px; height:192px;}
+  }
+
+  @media (max-height:700px) and (max-width:900px){
+    .hero{min-height:auto;}
+    .scroll-cue{display:none;}
   }
 
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important; transition:none !important;}
+    html{scroll-behavior:auto;}
+    .reveal,.reveal-scale,.hero h1 .word,.hero-desc,.hero-btns,.scroll-cue,.float-pill{opacity:1; transform:none;}
   }
 </style>
 </head>
@@ -651,23 +710,23 @@
         <p>A few things people usually want to know before booking.</p>
 
         <div class="faq-item">
-          <div class="faq-q">How long is each session?<span class="plus"></span></div>
+          <button class="faq-q" type="button" aria-expanded="false">How long is each session?<span class="plus" aria-hidden="true"></span></button>
           <div class="faq-a">Each session runs for 1 hour, giving enough time for assessment, hands-on treatment, and guidance on your home exercises.</div>
         </div>
         <div class="faq-item">
-          <div class="faq-q">What areas of Ipoh do you cover?<span class="plus"></span></div>
+          <button class="faq-q" type="button" aria-expanded="false">What areas of Ipoh do you cover?<span class="plus" aria-hidden="true"></span></button>
           <div class="faq-a">We cover most areas within Ipoh, Perak. Transport fees are calculated based on distance and confirmed with you before booking.</div>
         </div>
         <div class="faq-item">
-          <div class="faq-q">What should I prepare for a home session?<span class="plus"></span></div>
+          <button class="faq-q" type="button" aria-expanded="false">What should I prepare for a home session?<span class="plus" aria-hidden="true"></span></button>
           <div class="faq-a">Just a comfortable space (a room or living area is fine), loose clothing you can move in, and any relevant medical reports if you have them.</div>
         </div>
         <div class="faq-item">
-          <div class="faq-q">Can sessions be claimed under insurance?<span class="plus"></span></div>
+          <button class="faq-q" type="button" aria-expanded="false">Can sessions be claimed under insurance?<span class="plus" aria-hidden="true"></span></button>
           <div class="faq-a">At the moment, sessions can't be claimed through insurance. We can still provide a receipt for your own records if needed.</div>
         </div>
         <div class="faq-item">
-          <div class="faq-q">Do I need a doctor's referral?<span class="plus"></span></div>
+          <button class="faq-q" type="button" aria-expanded="false">Do I need a doctor's referral?<span class="plus" aria-hidden="true"></span></button>
           <div class="faq-a">No referral is needed — you can book directly. Having one can still be helpful if you're coming from a hospital stay or specialist consultation.</div>
         </div>
       </div>
@@ -676,7 +735,7 @@
 </section>
 
 <footer>
-  <p>© 2025 Nur Siti Eissya · Home Visit Physiotherapy · Ipoh, Perak &nbsp;·&nbsp; <a href="https://wa.me/60103890319" target="_blank">+60-10-389 0319</a></p>
+  <p>© <span id="copyright-year">2026</span> Nur Siti Eissya · Home Visit Physiotherapy · Ipoh, Perak &nbsp;·&nbsp; <a href="https://wa.me/60103890319" target="_blank" rel="noopener">+60-10-389 0319</a></p>
 </footer>
 
 <script>
@@ -733,12 +792,19 @@
 
   // ── FAQ accordion ──
   document.querySelectorAll('.faq-item').forEach(item => {
-    item.querySelector('.faq-q').addEventListener('click', () => {
+    const trigger = item.querySelector('.faq-q');
+    trigger.addEventListener('click', () => {
       const wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      document.querySelectorAll('.faq-item.open').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
       if (!wasOpen) item.classList.add('open');
+      trigger.setAttribute('aria-expanded', String(!wasOpen));
     });
   });
+
+  document.getElementById('copyright-year').textContent = new Date().getFullYear();
 </script>
 <script src="https://www.qlynk.site/qlynk-agent.js" data-widget-id="d547c896-e0b0-4335-9a21-93c2ca59cdc2" async></script>
 </body>
