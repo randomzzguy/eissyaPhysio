@@ -27,6 +27,7 @@ import {
   X,
 } from 'lucide-react';
 import { isDemoMode, supabase } from '../supabaseClient';
+import { canRenewPackage, renewPackageRecord } from '../packageRenewal';
 
 const packageOptions = {
   'Single Session': { sessions: 1, price: 140 },
@@ -216,7 +217,7 @@ const normalizeClient = (client) => {
     ...client,
     sessions_total: total,
     sessions_used: used,
-    package_price: Number(client.package_price || packageMeta.price),
+    package_price: Number(client.package_price ?? packageMeta.price),
     payment_status: client.payment_status || (used >= total ? 'due' : 'pending'),
     schedule_day_1: Number(firstDay),
     schedule_time_1: firstTime.slice(0, 5),
@@ -447,7 +448,40 @@ function AppointmentCard({ visit, onClose, onSave, saving }) {
   );
 }
 
-function ClientDetails({ client, appointments, onClose, onEdit, onOpenAppointment, onMarkPaid, onDelete }) {
+function RenewalForm({ client, onClose, onSave, saving, error }) {
+  const [packageName, setPackageName] = useState(client.package_name);
+  const [price, setPrice] = useState(packageOptions[client.package_name].price);
+  const [paymentStatus, setPaymentStatus] = useState('pending');
+  const [firstVisit, setFirstVisit] = useState(() => toDateTimeLocal(getNextScheduledSession(client, new Date())));
+  return (
+    <div className="modal-backdrop" onMouseDown={(event) => !saving && event.target === event.currentTarget && onClose()}>
+      <section className="modal" role="dialog" aria-modal="true" aria-labelledby="renewal-title">
+        <header className="modal-header">
+          <div><p className="eyebrow">{client.name}</p><h2 id="renewal-title">Renew package</h2></div>
+          <button className="icon-button" onClick={onClose} disabled={saving} aria-label="Close"><X /></button>
+        </header>
+        <form className="client-form" onSubmit={(event) => {
+          event.preventDefault();
+          onSave({ package_name: packageName, package_price: Number(price), sessions_total: packageOptions[packageName].sessions,
+            payment_status: paymentStatus, next_session: new Date(firstVisit).toISOString() });
+        }}>
+          <p>The completed, paid package will stay in this patient's history. Their details, weekly schedule and appointment notes will be kept.</p>
+          {error && <p className="page-error" role="alert">{error}</p>}
+          <div className="form-grid">
+            <label className="field">New package<select value={packageName} onChange={(event) => { setPackageName(event.target.value); setPrice(packageOptions[event.target.value].price); }} disabled={saving}>{Object.keys(packageOptions).map((name) => <option key={name}>{name}</option>)}</select></label>
+            <label className="field">Package price (RM)<input type="number" min="0" step="0.01" required value={price} onChange={(event) => setPrice(event.target.value)} disabled={saving} /></label>
+            <label className="field span-two">New package payment<select value={paymentStatus} onChange={(event) => setPaymentStatus(event.target.value)} disabled={saving}><option value="pending">Not paid — due after the final session</option><option value="paid">Already paid</option></select></label>
+            <label className="field span-two">First visit<input type="datetime-local" required value={firstVisit} onChange={(event) => setFirstVisit(event.target.value)} disabled={saving} /></label>
+            <p className="span-two">{packageOptions[packageName].sessions} new sessions · {formatMoney(price)}. Weekly schedule: {scheduleLabel(client)}. You can edit the schedule in the patient record after renewal.</p>
+          </div>
+          <footer className="modal-actions"><button className="secondary-button" type="button" onClick={onClose} disabled={saving}>Cancel</button><button className="primary-button" type="submit" disabled={saving}>{saving ? 'Renewing…' : 'Renew package'}</button></footer>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+function ClientDetails({ client, appointments, onClose, onEdit, onOpenAppointment, onMarkPaid, onRenew, onDelete, saving }) {
   const remaining = Math.max(client.sessions_total - client.sessions_used, 0);
   const currentAppointment = appointments.find((appointment) => appointment.status === 'scheduled' && sameInstant(appointment.original_scheduled_start, client.next_session));
   const nextVisitStart = currentAppointment?.scheduled_start || client.next_session;
@@ -485,8 +519,18 @@ function ClientDetails({ client, appointments, onClose, onEdit, onOpenAppointmen
         <div className="detail-section payment-detail">
           <h3>Package payment</h3>
           <div className="detail-row"><span>{formatMoney(client.package_price)}</span><span className={`payment-state ${client.payment_status}`}>{client.payment_status === 'due' ? 'Payment due' : client.payment_status === 'paid' ? 'Paid' : `Due after ${remaining} session${remaining === 1 ? '' : 's'}`}</span></div>
-          {client.payment_status === 'due' && <button className="complete-session" onClick={onMarkPaid}><Banknote /> Mark package as paid</button>}
+          {client.payment_status === 'due' && <button className="complete-session" onClick={onMarkPaid} disabled={saving}><Banknote /> Mark package as paid</button>}
+          {canRenewPackage(client) && <button className="primary-button" onClick={onRenew} disabled={saving}><PackageCheck /> Renew package</button>}
+          {remaining === 0 && client.payment_status !== 'paid' && <p>Mark this package as paid to renew it.</p>}
         </div>
+        {client.package_history?.length > 0 && <div className="detail-section package-history">
+          <h3>Previous packages</h3>
+          {[...client.package_history].reverse().map((item, index) => <article key={`${item.renewed_at}-${index}`}>
+            <div className="detail-row"><strong>{item.package_name}</strong><span className="payment-state paid">Paid · {formatMoney(item.package_price)}</span></div>
+            <p>{item.sessions_used} of {item.sessions_total} sessions completed · {item.cancelled_sessions} cancelled</p>
+            <p>Renewed {formatDate(item.renewed_at)}</p>
+          </article>)}
+        </div>}
         <div className="detail-section appointment-history">
           <h3>Appointment notes</h3>
           {appointments.length ? appointments.map((appointment) => (
@@ -521,6 +565,8 @@ function Dashboard({ session }) {
   const [formClient, setFormClient] = useState(undefined);
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [renewalClient, setRenewalClient] = useState(null);
+  const [renewalError, setRenewalError] = useState('');
   const [saving, setSaving] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [error, setError] = useState('');
@@ -534,14 +580,16 @@ function Dashboard({ session }) {
   useEffect(() => {
     const closeTopLayer = (event) => {
       if (event.key !== 'Escape') return;
-      if (selectedAppointment) setSelectedAppointment(null);
+      if (saving) return;
+      if (renewalClient) setRenewalClient(null);
+      else if (selectedAppointment) setSelectedAppointment(null);
       else if (formClient !== undefined) setFormClient(undefined);
       else if (selectedClient) setSelectedClient(null);
       else setMenuOpen(false);
     };
     document.addEventListener('keydown', closeTopLayer);
     return () => document.removeEventListener('keydown', closeTopLayer);
-  }, [formClient, selectedClient, selectedAppointment]);
+  }, [formClient, selectedClient, selectedAppointment, renewalClient, saving]);
 
   useEffect(() => {
     if (isDemoMode) return undefined;
@@ -598,6 +646,10 @@ function Dashboard({ session }) {
     }
 
     const record = { ...payload, owner_id: session.user.id };
+    // Derived UI value; both weekly appointments use schedule_time_1 in storage.
+    delete record.schedule_time_2;
+    // Only the renewal transaction should append to the package archive.
+    delete record.package_history;
     const { data, error: mutationError } = payload.id
       ? await supabase.from('clients').update(record).eq('id', payload.id).select().single()
       : await supabase.from('clients').insert(record).select().single();
@@ -666,7 +718,7 @@ function Dashboard({ session }) {
         sessions_used: sessionsUsed,
         cancelled_sessions: newlyCancelled ? (client.cancelled_sessions || 0) + 1 : client.cancelled_sessions,
         next_session: packageComplete ? null : isCurrentSlot ? getNextScheduledSession(client, new Date(new Date(payload.original_scheduled_start).getTime() + 60000)) : client.next_session,
-        payment_status: packageComplete ? 'due' : client.payment_status,
+        payment_status: packageComplete && client.payment_status !== 'paid' ? 'due' : client.payment_status,
         status: packageComplete ? 'completed' : client.status,
       };
       await saveClient(updatedClient, { closeForm: false, selectClient: false });
@@ -678,7 +730,39 @@ function Dashboard({ session }) {
   const markPaid = async (client) => {
     const updated = { ...client, payment_status: 'paid' };
     await saveClient(updated);
-    setSelectedClient(updated);
+  };
+
+  const renewPackage = async (renewal) => {
+    if (saving) return;
+    setSaving(true);
+    setRenewalError('');
+    try {
+      let renewed;
+      if (isDemoMode) {
+        const current = clients.find((client) => client.id === renewalClient.id);
+        renewed = normalizeClient(renewPackageRecord(current, renewal));
+        persistDemo(clients.map((client) => client.id === renewed.id ? renewed : client));
+      } else {
+        const { data, error: renewalFailure } = await supabase.rpc('renew_client_package', {
+          p_client_id: renewalClient.id,
+          p_expected_updated_at: renewalClient.updated_at,
+          p_package_name: renewal.package_name,
+          p_package_price: renewal.package_price,
+          p_payment_status: renewal.payment_status,
+          p_next_session: renewal.next_session,
+        });
+        if (renewalFailure) throw new Error(renewalFailure.code === 'PGRST202'
+          ? 'Package renewal needs the latest database update. Run migration_v5_package_renewals.sql, then try again.' : renewalFailure.message);
+        renewed = normalizeClient(data);
+        setClients((current) => current.map((client) => client.id === renewed.id ? renewed : client));
+      }
+      setSelectedClient(renewed);
+      setRenewalClient(null);
+    } catch (failure) {
+      setRenewalError(failure.message || 'The package could not be renewed. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const deleteClient = async (client) => {
@@ -830,13 +914,16 @@ function Dashboard({ session }) {
 
       {formClient !== undefined && <ClientForm client={formClient} onClose={() => setFormClient(undefined)} onSave={saveClient} saving={saving} />}
       {selectedAppointment && <AppointmentCard visit={selectedAppointment} onClose={() => setSelectedAppointment(null)} onSave={saveAppointment} saving={saving} />}
-      {selectedClient && formClient === undefined && !selectedAppointment && <ClientDetails
+      {renewalClient && <RenewalForm client={renewalClient} onClose={() => setRenewalClient(null)} onSave={renewPackage} saving={saving} error={renewalError} />}
+      {selectedClient && formClient === undefined && !selectedAppointment && !renewalClient && <ClientDetails
         client={selectedClient}
         appointments={appointments.filter((appointment) => appointment.client_id === selectedClient.id).sort((a, b) => new Date(b.scheduled_start) - new Date(a.scheduled_start))}
         onClose={() => setSelectedClient(null)}
         onEdit={() => setFormClient(selectedClient)}
         onOpenAppointment={(visit) => { setSelectedClient(null); setSelectedAppointment(visit); }}
         onMarkPaid={() => markPaid(selectedClient)}
+        onRenew={() => { setRenewalError(''); setRenewalClient(selectedClient); }}
+        saving={saving}
         onDelete={() => deleteClient(selectedClient)}
       />}
     </div>

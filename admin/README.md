@@ -5,7 +5,7 @@ A private React dashboard for managing clients, physiotherapy packages, sessions
 ## One-time Supabase setup (free tier)
 
 1. Create or open the Supabase project already referenced by `.env`.
-2. For a new project, open **SQL Editor**, paste `supabase/schema.sql`, and run it. If the original schema was already installed, run the numbered migration files in order through `supabase/migration_v4_appointments.sql`.
+2. For a new project, open **SQL Editor**, paste `supabase/schema.sql`, and run it. If the original schema was already installed, run the numbered migration files in order through `supabase/migration_v5_package_renewals.sql`.
 3. Open **Authentication → Users → Add user** and create Eissya's email/password account. Do not enable public sign-up.
 4. Confirm **Authentication → URL Configuration** includes the deployed admin URL.
 5. Keep these environment variables in local `.env` and in Vercel:
@@ -27,6 +27,9 @@ The SQL enables row-level security, so a signed-in user can only access records 
 - A cancelled visit advances to the next fixed slot and does not use a package session.
 - Payment stays “not due” until every package session is completed, then changes to “due” until marked paid.
 - Appointment cards store status changes, rescheduling details, and dated SOAP notes under each client.
+- To renew, open a patient with a completed, paid package and choose **Renew package**. Select the new package, price, payment status and first visit. Renewal keeps the same patient ID, contact details, schedule and SOAP notes, archives the previous package under **Previous packages**, and starts the new package with zero sessions used. Unused sessions must be completed before renewal.
+- A new package defaults to unpaid (due after its last session); choose **Already paid** only when payment for the new package has been received. Prepaid packages remain paid when completed.
+- Existing deployments must run `supabase/migration_v5_package_renewals.sql` before using renewal. The database saves the archive and renewal atomically and rejects stale or duplicate renewal requests.
 
 ## Local development
 
@@ -55,3 +58,8 @@ The simplest arrangement is:
 npm run build
 npm run lint
 ```
+
+For the renewal browser check, start Vite with `VITE_DEMO_MODE=true`, then run
+`python scripts/renewal_smoke.py http://127.0.0.1:5173` (Python Playwright and Chromium required).
+This checks desktop/mobile renewal, cancellation, payment eligibility, repeated renewals,
+saved history after refresh, retained SOAP notes, and prepaid package completion in isolated demo browser sessions.
